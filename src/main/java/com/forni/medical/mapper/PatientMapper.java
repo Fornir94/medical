@@ -1,10 +1,8 @@
 package com.forni.medical.mapper;
 
-import com.forni.medical.dto.PatientCreationDTO;
-import com.forni.medical.dto.PatientDTO;
-import com.forni.medical.dto.PatientEditDTO;
-import com.forni.medical.dto.PatientPasswordEditDTO;
-import com.forni.medical.model.Patient;
+import com.forni.medical.model.dto.PatientCreationDTO;
+import com.forni.medical.model.dto.PatientDTO;
+import com.forni.medical.model.entity.Patient;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

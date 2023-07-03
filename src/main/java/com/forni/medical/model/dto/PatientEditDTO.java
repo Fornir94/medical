@@ -1,4 +1,4 @@
-package com.forni.medical.dto;
+package com.forni.medical.model.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
