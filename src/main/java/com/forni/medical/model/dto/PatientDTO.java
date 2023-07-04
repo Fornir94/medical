@@ -1,6 +1,5 @@
-package com.forni.medical.dto;
+package com.forni.medical.model.dto;
 
-import com.forni.medical.repository.PatientRepository;
 import lombok.*;
 
 import java.time.LocalDate;

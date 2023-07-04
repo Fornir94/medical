@@ -1,13 +1,13 @@
 package com.forni.medical.service;
 
-import com.forni.medical.dto.PatientCreationDTO;
-import com.forni.medical.dto.PatientEditDTO;
+import com.forni.medical.model.dto.PatientCreationDTO;
+import com.forni.medical.model.dto.PatientEditDTO;
 import com.forni.medical.exception.PatientExistsException;
 import com.forni.medical.exception.IllegalPatientDataException;
 import com.forni.medical.exception.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
-import com.forni.medical.model.Patient;
-import com.forni.medical.dto.PatientDTO;
+import com.forni.medical.model.entity.Patient;
+import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

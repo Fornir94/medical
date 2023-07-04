@@ -1,12 +1,10 @@
-package com.forni.medical.model;
+package com.forni.medical.model.entity;
 
-import com.forni.medical.dto.PatientEditDTO;
+import com.forni.medical.model.dto.PatientEditDTO;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
