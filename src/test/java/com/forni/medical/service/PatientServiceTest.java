@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
 import static org.mockito.ArgumentMatchers.eq;
-
 
 @ExtendWith(MockitoExtension.class)
 public class PatientServiceTest {
@@ -38,7 +36,7 @@ public class PatientServiceTest {
     PatientService patientService;
 
     @Test
-    void patientByEmail_DataCorrect_PatientFound(){
+    void patientByEmail_DataCorrect_PatientFound() {
         // Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -53,7 +51,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void patientByEmail_PatientWithGivenEmailDoesNotExist_ExceptionThrown(){
+    void patientByEmail_PatientWithGivenEmailDoesNotExist_ExceptionThrown() {
         // Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -66,7 +64,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void addNewPatient_DataCorrect_PatientCreated(){
+    void addNewPatient_DataCorrect_PatientCreated() {
         //Given
         PatientCreationDTO patientCreationDTO = new PatientCreationDTO();
         Patient patient = new Patient();
@@ -82,7 +80,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void addNewPatient_PatientWithGivenEmailExists_ExceptionThrown(){
+    void addNewPatient_PatientWithGivenEmailExists_ExceptionThrown() {
         //Given
         PatientCreationDTO patientCreationDTO = new PatientCreationDTO();
         Mockito.when(patientRepository.findByEmail(eq(patientCreationDTO.getEmail()))).thenReturn(Optional.of(new Patient()));
@@ -94,7 +92,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void deletePatient_PatientWithGivenEmailDoesNotExist_ExceptionThrown(){
+    void deletePatient_PatientWithGivenEmailDoesNotExist_ExceptionThrown() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -107,7 +105,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void deletePatient_PatientExists_PatientDeleted(){
+    void deletePatient_PatientExists_PatientDeleted() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -119,7 +117,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void allPatients_DataCorrect_ListOfPatiensCreated(){
+    void allPatients_DataCorrect_ListOfPatiensCreated() {
         //Given
         List<Patient> patients = new ArrayList<>();
         Patient patient = new Patient();
@@ -144,7 +142,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void updatePassword_DataCorrect_PasswordUpdated(){
+    void updatePassword_DataCorrect_PasswordUpdated() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -154,11 +152,11 @@ public class PatientServiceTest {
         //When
         patientService.updatePassword("lol", "4321");
         //Then
-        Assertions.assertEquals("4321",patient.getPassword() );
+        Assertions.assertEquals("4321", patient.getPassword());
     }
 
     @Test
-    void updatePassword_PatientWithGivenEmailDoesNotExist_ExceptionThrown(){
+    void updatePassword_PatientWithGivenEmailDoesNotExist_ExceptionThrown() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -171,7 +169,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void updatePassword_NewPasswordIsNull_ExceptionThrown(){
+    void updatePassword_NewPasswordIsNull_ExceptionThrown() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -182,10 +180,8 @@ public class PatientServiceTest {
         Assertions.assertEquals("Wrong password", result.getMessage());
     }
 
-
-
     @Test
-    void update_DataCorrectWithDifferentUpdateEmail_PatientUpdated(){
+    void update_DataCorrectWithDifferentUpdateEmail_PatientUpdated() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -210,7 +206,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void update_DataCorrectWithTheSameUpdateEmail_PatientUpdated(){
+    void update_DataCorrectWithTheSameUpdateEmail_PatientUpdated() {
         //Given
         Patient patient = new Patient();
         patient.setEmail("lol");
@@ -279,15 +275,4 @@ public class PatientServiceTest {
         Assertions.assertEquals("Changing ID card number, or add null  is not allowed!", result.getMessage());
         Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getHttpStatus());
     }
-
-
-
-
-
-
-
-
-
-
-
 }
