@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS patient (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  id_Card_No VARCHAR(255) NOT NULL,
-  first_Name VARCHAR(255) NOT NULL,
-  last_Name VARCHAR(255) NOT NULL,
-  phone_Number VARCHAR(255) NOT NULL,
+  email VARCHAR(255),
+  password VARCHAR(255),
+  id_Card_No VARCHAR(255),
+  first_Name VARCHAR(255),
+  last_Name VARCHAR(255),
+  phone_Number VARCHAR(255),
   birthday DATE
 );
 
