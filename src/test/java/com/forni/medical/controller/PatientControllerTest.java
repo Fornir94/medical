@@ -55,9 +55,10 @@ public class PatientControllerTest {
     @Test
     @Rollback
     void addPatient_DataCorrect_PatientAddToBase() throws Exception {
-        PatientCreationDTO patientCreationDTO = new PatientCreationDTO();
-        patientCreationDTO.setEmail("xdd@hot.mail");
-        patientCreationDTO.setPassword("1234");
+        PatientCreationDTO patientCreationDTO = PatientCreationDTO.builder()
+                .email("xdd@hot.mail")
+                .password("1234")
+                .build();
         mockMvc.perform(post("/patients")
                         .content(objectMapper.writeValueAsString(patientCreationDTO))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -79,13 +80,14 @@ public class PatientControllerTest {
     @Test
     @Rollback
     void updatePatient_PatientExists_PatientUpdated() throws Exception {
-        PatientEditDTO patientEditDTO = new PatientEditDTO();
-        patientEditDTO.setPhoneNumber("1234455");
-        patientEditDTO.setLastName("Kowalski");
-        patientEditDTO.setFirstName("Jaca");
-        patientEditDTO.setBirthday(LocalDate.EPOCH);
-        patientEditDTO.setPassword("987765");
-        patientEditDTO.setEmail("kqqaa@gmail.com");
+        PatientEditDTO patientEditDTO = PatientEditDTO.builder()
+                .firstName("Jaca")
+                .lastName("Kowalski")
+                .phoneNumber("1234456")
+                .birthday(LocalDate.EPOCH)
+                .password("987765")
+                .email("kqqaa@gmail.com")
+                .build();
         mockMvc.perform(put("/patients/walezgwinta@gmail.com")
                         .content(objectMapper.writeValueAsString(patientEditDTO))
                         .contentType(MediaType.APPLICATION_JSON))
