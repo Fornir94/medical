@@ -1,10 +1,13 @@
 package com.forni.medical.model.entity;
 
 import com.forni.medical.model.dto.PatientEditDTO;
+import com.forni.medical.model.dto.VisitDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +28,8 @@ public class Patient {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
+    @OneToMany(mappedBy = "patient")
+    private List<Visit> visits;
 
     public void update(PatientEditDTO patientEditDTO){
         this.email = patientEditDTO.getEmail();

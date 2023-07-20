@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Fornir94
+      changes:
+        - createTable:
+            tableName: visit
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_visit_id
+                  name: ID
+                  type: int
+              - column:
+                  name: DATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PATIENT_ID
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_patient_id
+                    references: patient

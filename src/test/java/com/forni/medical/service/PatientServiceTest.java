@@ -1,8 +1,8 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.IllegalPatientDataException;
-import com.forni.medical.exception.PatientExistsException;
-import com.forni.medical.exception.PatientNotFoundException;
+import com.forni.medical.exception.patientexception.IllegalPatientDataException;
+import com.forni.medical.exception.patientexception.PatientExistsException;
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientDTO;

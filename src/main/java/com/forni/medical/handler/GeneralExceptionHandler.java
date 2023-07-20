@@ -1,9 +1,13 @@
 package com.forni.medical.handler;
 
-import com.forni.medical.exception.IllegalPatientDataException;
+import com.forni.medical.exception.patientexception.IllegalPatientDataException;
 import com.forni.medical.exception.MedicalException;
-import com.forni.medical.exception.PatientExistsException;
-import com.forni.medical.exception.PatientNotFoundException;
+import com.forni.medical.exception.patientexception.PatientExistsException;
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
+import com.forni.medical.exception.visitexception.VisitDateException;
+import com.forni.medical.exception.visitexception.VisitExistsException;
+import com.forni.medical.exception.visitexception.VisitFullException;
+import com.forni.medical.exception.visitexception.VisitNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,5 +38,25 @@ public class GeneralExceptionHandler{
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> patientExceptionErrorResponse(RuntimeException e){
         return ResponseEntity.status(500).body("Unknown error exception");
+    }
+
+    @ExceptionHandler(VisitExistsException.class)
+    public ResponseEntity<String> visitExceptionErrorResponse(VisitExistsException e){
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    }
+
+    @ExceptionHandler(VisitNotFoundException.class)
+        public ResponseEntity<String> visitExceptionErrorResponse(VisitNotFoundException e){
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    }
+
+    @ExceptionHandler(VisitDateException.class)
+        public ResponseEntity<String> visitExceptionErrorResponse(VisitDateException e){
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
+    }
+
+    @ExceptionHandler(VisitFullException.class)
+        public ResponseEntity<String> visitExceptionErrorResponse(VisitFullException e){
+        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 }

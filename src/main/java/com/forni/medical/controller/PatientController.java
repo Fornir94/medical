@@ -3,6 +3,8 @@ package com.forni.medical.controller;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientEditDTO;
 import com.forni.medical.model.dto.PatientDTO;
+import com.forni.medical.model.dto.VisitDTO;
+import com.forni.medical.model.entity.Visit;
 import com.forni.medical.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +25,11 @@ public class PatientController {
     @GetMapping("/{email}")
     public PatientDTO getPatientByEmail(@PathVariable String email){
         return patientService.patientByEmail(email);
+    }
+
+    @GetMapping("{email}/visits")
+    public List<VisitDTO> getPatientVisits(@PathVariable String email){
+        return patientService.allPatientVisits(email);
     }
 
     @PostMapping
