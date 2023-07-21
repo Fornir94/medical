@@ -6,7 +6,7 @@ import com.forni.medical.exception.patientexception.PatientExistsException;
 import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
 import com.forni.medical.exception.visitexception.VisitExistsException;
-import com.forni.medical.exception.visitexception.VisitFullException;
+import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -55,8 +55,8 @@ public class GeneralExceptionHandler{
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
-    @ExceptionHandler(VisitFullException.class)
-        public ResponseEntity<String> visitExceptionErrorResponse(VisitFullException e){
+    @ExceptionHandler(VisitBookedException.class)
+        public ResponseEntity<String> visitExceptionErrorResponse(VisitBookedException e){
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 }

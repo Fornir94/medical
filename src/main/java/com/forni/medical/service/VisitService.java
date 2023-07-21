@@ -2,9 +2,11 @@ package com.forni.medical.service;
 
 import com.forni.medical.exception.visitexception.VisitDateException;
 import com.forni.medical.exception.visitexception.VisitExistsException;
-import com.forni.medical.exception.visitexception.VisitFullException;
+import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
+import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.mapper.VisitMapper;
+import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
@@ -24,15 +26,18 @@ public class VisitService {
 
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
+    private final PatientService patientService;
+    private final PatientMapper patientMapper;
 
     public VisitDTO addVisit(VisitCreationDTO visitCreationDTO){
-        Optional<Visit> visit1 = visitRepository.findByDate(visitCreationDTO.getDate());
-        if (visit1.isPresent()){
+        Optional<Visit> visitOptional = visitRepository.findByVisitDate(visitCreationDTO.getVisitDate());
+        if (visitOptional.isPresent()){
             throw new VisitExistsException("Visit with this date already exists");
         }
-        if (visitCreationDTO.getDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getDate().getMinute() % 15!=0){
+        if (visitCreationDTO.getVisitDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getVisitDate().getMinute() % 15!=0) {
             throw new VisitDateException("Visit with this date is before then actual, or time is different than a full quarter of an hour");
         }
+
         Visit visit= visitMapper.toEntity(visitCreationDTO);
         return visitMapper.toDto(visitRepository.save(visit));
     }
@@ -43,13 +48,15 @@ public class VisitService {
                 .collect(Collectors.toList());
     }
 
-    public void addPatientToVisit(Long id, Patient patient){
-        Visit visit = visitRepository.findById(id).orElseThrow(()-> new VisitNotFoundException("Visit not found"));
+    public PatientDTO addPatientToVisit(Long visitId, Long patientId ){
+        Visit visit = visitRepository.findById(visitId).orElseThrow(()-> new VisitNotFoundException("Visit not found"));
         if (visit.getPatient()!=null){
-            throw new VisitFullException("This Visit is full");
+            throw new VisitBookedException("This Visit is booked");
         }
+        Patient patient = patientService.patientById(patientId);
         visit.setPatient(patient);
         visitRepository.save(visit);
+        return patientMapper.toDto(patient);
     }
 
     public VisitDTO findVisit(Long id){

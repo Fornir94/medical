@@ -1,20 +1,18 @@
 package com.forni.medical.model.dto;
 
-import com.forni.medical.model.entity.Patient;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class VisitCreationDTO {
 
     private Long id;
-    private LocalDateTime date;
-    private Patient patient;
+    private LocalDateTime visitDate;
+    private PatientDTO patient;
 }

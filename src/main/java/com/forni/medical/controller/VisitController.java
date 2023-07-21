@@ -1,9 +1,8 @@
 package com.forni.medical.controller;
 
+import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
-import com.forni.medical.model.entity.Patient;
-import com.forni.medical.model.entity.Visit;
 import com.forni.medical.service.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +31,9 @@ public class VisitController {
         return visitService.addVisit(visitCreationDTO);
     }
 
-    @PatchMapping("/{id}")
-    public void addPatientToVisit(@PathVariable Long id, @RequestBody Patient patient){
-        visitService.addPatientToVisit(id, patient);
+    @PatchMapping("/{id}/patient/{patientId}")
+    public PatientDTO addPatientToVisit(@PathVariable Long id, @PathVariable Long patientId){
+        return visitService.addPatientToVisit(id, patientId);
     }
 
     @DeleteMapping("/{id}")

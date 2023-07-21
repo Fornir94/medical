@@ -50,6 +50,8 @@ public class PatientServiceTest {
         Assertions.assertEquals("lol", result.getEmail());
     }
 
+
+
     @Test
     void patientByEmail_PatientWithGivenEmailDoesNotExist_ExceptionThrown() {
         // Given
@@ -58,6 +60,32 @@ public class PatientServiceTest {
         Mockito.when(patientRepository.findByEmail(eq("lol"))).thenReturn(Optional.empty());
         //When
         var result = Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.patientByEmail(patient.getEmail()));
+        //Then
+        Assertions.assertEquals("Patient not found", result.getMessage());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
+    }
+
+    @Test
+    void patientById_DataCorrect_PatientFound() {
+        // Given
+        Patient patient = new Patient();
+        patient.setEmail("lol");
+        patient.setId(1L);
+        Mockito.when(patientRepository.findById(eq(1L))).thenReturn(Optional.of(patient));
+        //When
+        var result = patientService.patientById(1L);
+        //Then
+        Assertions.assertEquals("lol", result.getEmail());
+    }
+
+    @Test
+    void patientByEmail_PatientWithGivenIdDoesNotExist_ExceptionThrown() {
+        // Given
+        Patient patient = new Patient();
+        patient.setId(1L);
+        Mockito.when(patientRepository.findById(eq(1L))).thenReturn(Optional.empty());
+        //When
+        var result = Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.patientById(patient.getId()));
         //Then
         Assertions.assertEquals("Patient not found", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
@@ -88,7 +116,7 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(PatientExistsException.class, () -> patientService.addNewPatient(patientCreationDTO));
         //Then
         Assertions.assertEquals("Patient with this email already exists", result.getMessage());
-        Assertions.assertEquals(HttpStatus.IM_USED, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.CONFLICT, result.getHttpStatus());
     }
 
     @Test
@@ -258,7 +286,7 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(PatientExistsException.class, () -> patientService.update("lol", patientEditDTO));
         //Then
         Assertions.assertEquals("Any user have a such email", result.getMessage());
-        Assertions.assertEquals(HttpStatus.IM_USED, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.CONFLICT, result.getHttpStatus());
     }
 
     @Test
@@ -273,6 +301,6 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(IllegalPatientDataException.class, () -> patientService.update("lol", patientEditDTO));
         //Then
         Assertions.assertEquals("Changing ID card number, or add null  is not allowed!", result.getMessage());
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getHttpStatus());
     }
 }

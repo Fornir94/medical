@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class VisitExistsException extends MedicalException {
 
     public VisitExistsException(String message){
-        super(message, HttpStatus.IM_USED);
+        super(message, HttpStatus.CONFLICT);
     }
 }

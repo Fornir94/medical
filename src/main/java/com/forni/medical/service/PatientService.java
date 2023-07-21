@@ -9,8 +9,7 @@ import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
-import com.forni.medical.model.dto.PatientDTO;
-import com.forni.medical.model.entity.Visit;
+import com.forni.medical.model.dto.PatientDTO;;
 import com.forni.medical.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,11 @@ public class PatientService {
     public PatientDTO patientByEmail(String email) {
         return patientRepository.findByEmail(email).stream()
                 .map(patientMapper::toDto)
+                .findFirst().orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+    }
+
+    public Patient patientById(Long id) {
+        return patientRepository.findById(id).stream()
                 .findFirst().orElseThrow(() -> new PatientNotFoundException("Patient not found"));
     }
 

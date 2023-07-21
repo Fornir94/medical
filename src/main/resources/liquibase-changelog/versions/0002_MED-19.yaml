@@ -15,7 +15,7 @@ databaseChangeLog:
                   name: ID
                   type: int
               - column:
-                  name: DATE
+                  name: VISIT_DATE
                   type: timestamp
                   constraints:
                     nullable: false

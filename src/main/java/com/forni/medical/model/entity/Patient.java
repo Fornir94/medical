@@ -1,13 +1,11 @@
 package com.forni.medical.model.entity;
 
 import com.forni.medical.model.dto.PatientEditDTO;
-import com.forni.medical.model.dto.VisitDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
