@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -14,7 +15,9 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class VisitDTO {
     private Long id;
-    private LocalDateTime visitDate;
+    private LocalDateTime visitStartDate;
+    private LocalDateTime visitEndDate;
+    private Duration durationTime;
     private PatientDTO patient;
     private Long patientId;
 }

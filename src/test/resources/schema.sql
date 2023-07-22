@@ -32,15 +32,17 @@ VALUES ('puzon69@gmail.com', '012343243','0483', 'Cezary', 'Puzonista', '2432423
 
 CREATE TABLE IF NOT EXISTS visit (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  visit_Date TIMESTAMP,
+  visit_Start_Date TIMESTAMP,
+  visit_End_Date TIMESTAMP.
+  visit_Time DOUBLE,
   FOREIGN KEY (patient_id) REFERENCES patient(id)
 );
 
-INSERT INTO visit (visit_Date, patient_id)
-VALUES ('2024-07-20T17:30:00', null);
-INSERT INTO visit (visit_Date, patient_id)
-VALUES ('2024-07-20T18:30:00', null);
-INSERT INTO visit (visit_Date, patient_id)
-VALUES ('2024-07-20T19:30:00', null);
-INSERT INTO visit (visit_Date, patient_id)
-VALUES ('2024-07-20T20:30:00', null);
+INSERT INTO visit (visit_Start_Date, visit_End_Date, visit_Time, patient_id)
+VALUES ('2024-07-20T17:30:00', '2024-07-20T18:30:00', 'PT1H', null);
+INSERT INTO visit (visit_Start_Date, visit_End_Date, visit_Time, patient_id)
+VALUES ('2024-07-20T18:30:00', '2024-07-20T19:30:00', 'PT1H', null);
+INSERT INTO visit (visit_Start_Date, visit_End_Date, visit_Time, patient_id)
+VALUES ('2024-07-20T19:30:00', '2024-07-20T20:30:00', 'PT1H', null);
+INSERT INTO visit(visit_Start_Date, visit_End_Date, visit_Time, patient_id)
+VALUES ('2024-07-20T20:30:00', '2024-07-20T21:30:00', 'PT1H', null);

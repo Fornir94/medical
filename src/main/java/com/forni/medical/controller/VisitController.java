@@ -32,7 +32,7 @@ public class VisitController {
     }
 
     @PatchMapping("/{id}/patient/{patientId}")
-    public PatientDTO addPatientToVisit(@PathVariable Long id, @PathVariable Long patientId){
+    public VisitDTO addPatientToVisit(@PathVariable Long id, @PathVariable Long patientId){
         return visitService.addPatientToVisit(id, patientId);
     }
 

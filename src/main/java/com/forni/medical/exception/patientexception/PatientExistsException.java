@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class PatientExistsException extends MedicalException {
     public PatientExistsException(String message){
-        super(message, HttpStatus.CONFLICT);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

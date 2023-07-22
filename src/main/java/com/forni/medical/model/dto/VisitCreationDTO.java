@@ -13,6 +13,7 @@ import java.time.LocalTime;
 public class VisitCreationDTO {
 
     private Long id;
-    private LocalDateTime visitDate;
+    private LocalDateTime visitStartDate;
+    private LocalDateTime visitEndDate;
     private PatientDTO patient;
 }

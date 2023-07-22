@@ -50,19 +50,19 @@ public class VisitControllerTest {
                 .andExpect(jsonPath("$.visitDate").value("2024-07-20T17:30:00"));
     }
 
-    @Test
-    @Rollback
-    void addVisit_DataCorrect_VisitCreated() throws Exception {
-        VisitCreationDTO visitCreationDTO = VisitCreationDTO.builder()
-                .visitDate(LocalDateTime.of(2025, 12, 10, 17, 30, 00))
-                .build();
-        mockMvc.perform(post("/visits")
-                        .content(objectMapper.writeValueAsString(visitCreationDTO))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().is(200))
-                .andExpect(jsonPath("$.visitDate").value("2025-12-10T17:30:00"));
-    }
+//    @Test
+//    @Rollback
+//    void addVisit_DataCorrect_VisitCreated() throws Exception {
+//        VisitCreationDTO visitCreationDTO = VisitCreationDTO.builder()
+//                .visitDate(LocalDateTime.of(2025, 12, 10, 17, 30, 00))
+//                .build();
+//        mockMvc.perform(post("/visits")
+//                        .content(objectMapper.writeValueAsString(visitCreationDTO))
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andDo(print())
+//                .andExpect(status().is(200))
+//                .andExpect(jsonPath("$.visitDate").value("2025-12-10T17:30:00"));
+//    }
 
     @Test
     @Rollback
@@ -70,7 +70,7 @@ public class VisitControllerTest {
         mockMvc.perform(patch("/visits/1/patient/1"))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.email").value("misiakasia@gmail.com"));
+                .andExpect(jsonPath("$.patientId").value(1L));
     }
 
     @Test

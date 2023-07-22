@@ -1,16 +1,17 @@
 package com.forni.medical.service;
 
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
 import com.forni.medical.exception.visitexception.VisitExistsException;
 import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.mapper.VisitMapper;
-import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
 import com.forni.medical.model.entity.Visit;
+import com.forni.medical.repository.PatientRepository;
 import com.forni.medical.repository.VisitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,47 +27,49 @@ public class VisitService {
 
     private final VisitRepository visitRepository;
     private final VisitMapper visitMapper;
-    private final PatientService patientService;
-    private final PatientMapper patientMapper;
+    private final PatientRepository patientRepository;
 
-    public VisitDTO addVisit(VisitCreationDTO visitCreationDTO){
-        Optional<Visit> visitOptional = visitRepository.findByVisitDate(visitCreationDTO.getVisitDate());
-        if (visitOptional.isPresent()){
+    public VisitDTO addVisit(VisitCreationDTO visitCreationDTO) {
+        Optional<Visit> visitOptional = visitRepository.findByVisitStartDate(visitCreationDTO.getVisitStartDate());
+        if (visitOptional.isPresent()) {
             throw new VisitExistsException("Visit with this date already exists");
         }
-        if (visitCreationDTO.getVisitDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getVisitDate().getMinute() % 15!=0) {
+        if (visitCreationDTO.getVisitStartDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getVisitStartDate().getMinute() % 15 != 0) {
             throw new VisitDateException("Visit with this date is before then actual, or time is different than a full quarter of an hour");
         }
-
-        Visit visit= visitMapper.toEntity(visitCreationDTO);
+        List<Visit> checkVisit = visitRepository.findAllOverLapping(visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate());
+        if (!checkVisit.isEmpty()){
+            throw new VisitDateException("The time of the visit coincides with another visit");
+        }
+        Visit visit = visitMapper.toEntity(visitCreationDTO);
+        visit.setDurationTime();
         return visitMapper.toDto(visitRepository.save(visit));
     }
 
-    public List<VisitDTO> getAllVisits(){
+    public List<VisitDTO> getAllVisits() {
         return visitRepository.findAll().stream()
                 .map(visitMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public PatientDTO addPatientToVisit(Long visitId, Long patientId ){
-        Visit visit = visitRepository.findById(visitId).orElseThrow(()-> new VisitNotFoundException("Visit not found"));
-        if (visit.getPatient()!=null){
+    public VisitDTO addPatientToVisit(Long visitId, Long patientId) {
+        Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new VisitNotFoundException("Visit not found"));
+        if (visit.getPatient() != null) {
             throw new VisitBookedException("This Visit is booked");
         }
-        Patient patient = patientService.patientById(patientId);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
         visit.setPatient(patient);
-        visitRepository.save(visit);
-        return patientMapper.toDto(patient);
+        return visitMapper.toDto(visitRepository.save(visit));
     }
 
-    public VisitDTO findVisit(Long id){
+    public VisitDTO findVisit(Long id) {
         return visitRepository.findById(id).stream()
                 .map(visitMapper::toDto)
-                .findFirst().orElseThrow(()->new VisitNotFoundException("Visit not found"));
+                .findFirst().orElseThrow(() -> new VisitNotFoundException("Visit not found"));
     }
 
-    public void deleteVisit(Long id){
-        Visit visit = visitRepository.findById(id).orElseThrow(()-> new VisitNotFoundException("Visit not found"));
+    public void deleteVisit(Long id) {
+        Visit visit = visitRepository.findById(id).orElseThrow(() -> new VisitNotFoundException("Visit not found"));
         visitRepository.delete(visit);
     }
 }

@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 
 public class VisitBookedException extends MedicalException {
     public VisitBookedException(String message){
-        super(message, HttpStatus.NOT_ACCEPTABLE);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

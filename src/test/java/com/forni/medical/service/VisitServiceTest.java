@@ -1,5 +1,6 @@
 package com.forni.medical.service;
 
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
 import com.forni.medical.exception.visitexception.VisitExistsException;
 import com.forni.medical.exception.visitexception.VisitBookedException;
@@ -11,6 +12,7 @@ import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
 import com.forni.medical.model.entity.Visit;
+import com.forni.medical.repository.PatientRepository;
 import com.forni.medical.repository.VisitRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -35,82 +37,102 @@ public class VisitServiceTest {
     VisitRepository visitRepository;
     @Mock
     VisitMapper visitMapper;
-    @Mock
-    PatientMapper patientMapper;
     @InjectMocks
     VisitService visitService;
     @Mock
-    PatientService patientService;
+    PatientRepository patientRepository;
 
     @Test
-    void addVisit_DataCorrect_VisitCreated(){
+    void addVisit_DataCorrect_VisitCreated() {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        visitCreationDTO.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
+        visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         Visit visit = new Visit();
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         VisitDTO visitDTO = new VisitDTO();
-        Mockito.when(visitRepository.findByVisitDate(eq(visitCreationDTO.getVisitDate()))).thenReturn(Optional.empty());
+        visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
         Mockito.when(visitMapper.toEntity(eq(visitCreationDTO))).thenReturn(visit);
         Mockito.when(visitRepository.save(eq(visit))).thenReturn(visit);
         Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
         //When
-        var reuslt=visitService.addVisit(visitCreationDTO);
+        var result = visitService.addVisit(visitCreationDTO);
         //Then
-        Assertions.assertEquals(visitDTO, reuslt);
+        Assertions.assertEquals(visitDTO, result);
     }
 
     @Test
-    void addVisit_VisitWithGivenDateExists_ExceptionThrow(){
+    void addVisit_VisitWithGivenDateExists_ExceptionThrow() {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        Mockito.when(visitRepository.findByVisitDate(eq(visitCreationDTO.getVisitDate()))).thenReturn(Optional.of(new Visit()));
+        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.of(new Visit()));
         //When
-        var result = Assertions.assertThrows(VisitExistsException.class, ()->visitService.addVisit(visitCreationDTO));
+        var result = Assertions.assertThrows(VisitExistsException.class, () -> visitService.addVisit(visitCreationDTO));
         //Then
         Assertions.assertEquals("Visit with this date already exists", result.getMessage());
-        Assertions.assertEquals(HttpStatus.CONFLICT, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
-    void addVisit_VisitDataCreationIsBeforeThenNow_ExceptionThrow(){
+    void addVisit_VisitDataCreationIsBeforeThenNow_ExceptionThrow() {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        visitCreationDTO.setVisitDate(LocalDateTime.of(2022, 12, 10, 17, 30, 00));
-        Mockito.when(visitRepository.findByVisitDate(eq(visitCreationDTO.getVisitDate()))).thenReturn(Optional.empty());
+        visitCreationDTO.setVisitStartDate(LocalDateTime.of(2022, 12, 10, 17, 30, 0));
+        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
         //When
-        var result = Assertions.assertThrows(VisitDateException.class, ()->visitService.addVisit(visitCreationDTO));
+        var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
         //Then
         Assertions.assertEquals("Visit with this date is before then actual, or time is different than a full quarter of an hour", result.getMessage());
-        Assertions.assertEquals(HttpStatus.CONFLICT, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
-    void addVisit_VisitDataCreationIsNotQuaterOfAnHour_ExceptionThrow(){
+    void addVisit_VisitDataCreationIsNotQuaterOfAnHour_ExceptionThrow() {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        visitCreationDTO.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 25, 00));
-        Mockito.when(visitRepository.findByVisitDate(eq(visitCreationDTO.getVisitDate()))).thenReturn(Optional.empty());
+        visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 25, 0));
+        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
         //When
-        var result = Assertions.assertThrows(VisitDateException.class, ()->visitService.addVisit(visitCreationDTO));
+        var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
         //Then
         Assertions.assertEquals("Visit with this date is before then actual, or time is different than a full quarter of an hour", result.getMessage());
-        Assertions.assertEquals(HttpStatus.CONFLICT, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
-    void getAllVisits_DataCorrect_ListOfVisitsCreated(){
+    void addVisit_VisiTimeCoincidesWithAnotherOne_ExceptionThrow() {
+        //Given
+        VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
+        visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visitCreationDTO.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 17, 45, 0));
+        List<Visit> visits = new ArrayList<>();
+        Visit visit = new Visit();
+        visits.add(visit);
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 0, 0));
+        visit.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 0, 0));
+        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
+        Mockito.when(visitRepository.findAllOverLapping(eq(visitCreationDTO.getVisitStartDate()),eq(visitCreationDTO.getVisitEndDate()))).thenReturn(visits);
+        //When
+        var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
+        //Then
+        Assertions.assertEquals("The time of the visit coincides with another visit", result.getMessage());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
+    }
+
+    @Test
+    void getAllVisits_DataCorrect_ListOfVisitsCreated() {
         //Given
         List<Visit> visits = new ArrayList<>();
         Visit visit = new Visit();
         Visit visit1 = new Visit();
-        visit.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
-        visit.setVisitDate(LocalDateTime.of(2024, 12, 10, 18, 30, 00));
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
         visits.add(visit);
         visits.add(visit1);
         VisitDTO visitDTO = new VisitDTO();
         VisitDTO visitDTO1 = new VisitDTO();
-        visitDTO.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
-        visitDTO1.setVisitDate(LocalDateTime.of(2024, 12, 10, 18, 30, 00));
+        visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visitDTO1.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
         Mockito.when(visitRepository.findAll()).thenReturn(visits);
         Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
         Mockito.when(visitMapper.toDto(eq(visit1))).thenReturn(visitDTO1);
@@ -118,99 +140,118 @@ public class VisitServiceTest {
         var result = visitService.getAllVisits();
         //Then
         Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 17, 30, 00), result.get(0).getVisitDate());
-        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 18, 30, 00), result.get(1).getVisitDate());
+        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 17, 30, 0), result.get(0).getVisitStartDate());
+        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 18, 30, 0), result.get(1).getVisitStartDate());
     }
 
     @Test
-    void addPatientToVisit_DataCorrect_PatientAdd(){
+    void addPatientToVisit_DataCorrect_PatientAdd() {
         //Given
         Visit visit = new Visit();
-        visit.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         visit.setId(1L);
+        VisitDTO visitDTO = new VisitDTO();
+        visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visitDTO.setId(1L);
         Patient patient = new Patient();
         patient.setId(1L);
         PatientDTO patientDTO = new PatientDTO();
         patientDTO.setId(1L);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.of(visit));
-        Mockito.when(patientService.patientById(eq(patient.getId()))).thenReturn(patient);
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.of(visit));
+        Mockito.when(patientRepository.findById(eq(1L))).thenReturn(Optional.of(patient));
         Mockito.when(visitRepository.save(visit)).thenReturn(visit);
-        Mockito.when(patientMapper.toDto(eq(patient))).thenReturn(patientDTO);
+        Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
         //When
-        visitService.addPatientToVisit(1L, 1L);
+        var result = visitService.addPatientToVisit(1L, 1L);
         //Then
-        Assertions.assertEquals(patient, visit.getPatient());
+        Mockito.verify(visitRepository, Mockito.times(1)).save(eq(visit));
+        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 17, 30, 0), result.getVisitStartDate());
     }
 
     @Test
-    void addPatientToVisit_VisitNotFound_ThrowException(){
+    void addPatientToVisit_VisitNotFound_ThrowException() {
         //Given
         Visit visit = new Visit();
         Patient patient = new Patient();
         patient.setId(1L);
         visit.setId(1L);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.empty());
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.empty());
         //When
-        var result = Assertions.assertThrows(VisitNotFoundException.class, ()->visitService.addPatientToVisit(1L, 1L));
+        var result = Assertions.assertThrows(VisitNotFoundException.class, () -> visitService.addPatientToVisit(1L, 1L));
         //Then
         Assertions.assertEquals("Visit not found", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
-
-  }
+    }
 
     @Test
-    void addPatientToVisit_VisitIsFull_ThrowException(){
+    void addPatientToVisit_VisitIsBooked_ThrowException() {
         //Given
         Visit visit = new Visit();
         Patient patient = new Patient();
         patient.setId(1L);
         visit.setId(1L);
         visit.setPatient(patient);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.of(visit));
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.of(visit));
         //When
-        var result = Assertions.assertThrows(VisitBookedException.class, ()->visitService.addPatientToVisit(1L, 1L));
+        var result = Assertions.assertThrows(VisitBookedException.class, () -> visitService.addPatientToVisit(1L, 1L));
         //Then
         Assertions.assertEquals("This Visit is booked", result.getMessage());
-        Assertions.assertEquals(HttpStatus.NOT_ACCEPTABLE, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
-    void findVisit_DataCorrect_VisitFounded(){
+    void addPatientToVisit_PatientNotFound_ThrowException() {
+        //Given
+        Visit visit = new Visit();
+        Patient patient = new Patient();
+        patient.setId(1L);
+        visit.setId(1L);
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.of(visit));
+        Mockito.when(patientRepository.findById(eq(1L))).thenReturn(Optional.empty());
+        //When
+        var result = Assertions.assertThrows(PatientNotFoundException.class, () -> visitService.addPatientToVisit(1L, 1L));
+        //Then
+        Assertions.assertEquals("Patient not found", result.getMessage());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
+    }
+
+    @Test
+    void findVisit_DataCorrect_VisitFounded() {
         //Given
         Visit visit = new Visit();
         visit.setId(1L);
-        visit.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         VisitDTO visitDTO = new VisitDTO();
         visitDTO.setId(1L);
-        visitDTO.setVisitDate(LocalDateTime.of(2024, 12, 10, 17, 30, 00));
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.of(visit));
+        visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.of(visit));
         Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
         //When
         var result = visitService.findVisit(1L);
         //Then
         Assertions.assertEquals(1L, visitDTO.getId());
-        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 17, 30, 00), visitDTO.getVisitDate());
+        Assertions.assertEquals(LocalDateTime.of(2024, 12, 10, 17, 30, 0), visitDTO.getVisitStartDate());
     }
 
     @Test
-    void findVisit_VisitNotFound_ThrowException(){
+    void findVisit_VisitNotFound_ThrowException() {
         //Given
         Visit visit = new Visit();
         visit.setId(1L);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.empty());
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.empty());
         //When
-        var result = Assertions.assertThrows(VisitNotFoundException.class, ()->visitService.findVisit(visit.getId()));
+        var result = Assertions.assertThrows(VisitNotFoundException.class, () -> visitService.findVisit(visit.getId()));
         //Then
         Assertions.assertEquals("Visit not found", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
     }
 
     @Test
-    void deleteVisit_DataCorrect_VisitDeleted(){
+    void deleteVisit_DataCorrect_VisitDeleted() {
         //Given
         Visit visit = new Visit();
         visit.setId(1L);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.of(visit));
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.of(visit));
         //When
         visitService.deleteVisit(1L);
         //Then
@@ -218,13 +259,13 @@ public class VisitServiceTest {
     }
 
     @Test
-    void deleteVisit_VisitNotFound_ThrowException(){
+    void deleteVisit_VisitNotFound_ThrowException() {
         //Given
         Visit visit = new Visit();
         visit.setId(1L);
-        Mockito.when(visitRepository.findById(eq(visit.getId()))).thenReturn(Optional.empty());
+        Mockito.when(visitRepository.findById(eq(1L))).thenReturn(Optional.empty());
         //When
-        var result = Assertions.assertThrows(VisitNotFoundException.class, ()->visitService.deleteVisit(1L));
+        var result = Assertions.assertThrows(VisitNotFoundException.class, () -> visitService.deleteVisit(1L));
         //Then
         Assertions.assertEquals("Visit not found", result.getMessage());
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());

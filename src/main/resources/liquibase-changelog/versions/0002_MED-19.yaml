@@ -15,10 +15,18 @@ databaseChangeLog:
                   name: ID
                   type: int
               - column:
-                  name: VISIT_DATE
+                  name: VISIT_START_DATE
                   type: timestamp
                   constraints:
                     nullable: false
+              - column:
+                  name: VISIT_END_DATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: VISIT_TIME
+                  type: double
               - column:
                   name: PATIENT_ID
                   type: int

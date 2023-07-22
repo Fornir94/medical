@@ -33,16 +33,11 @@ public class PatientService {
                 .findFirst().orElseThrow(() -> new PatientNotFoundException("Patient not found"));
     }
 
-    public Patient patientById(Long id) {
-        return patientRepository.findById(id).stream()
-                .findFirst().orElseThrow(() -> new PatientNotFoundException("Patient not found"));
-    }
-
     public PatientDTO update(String email, PatientEditDTO updatePatient) {
         Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
-        Optional<Patient> patient1 = patientRepository.findByEmail(updatePatient.getEmail());
+        Optional<Patient> patientOptional = patientRepository.findByEmail(updatePatient.getEmail());
 
-        if (!updatePatient.getEmail().equals(email) && patient1.isPresent()) {
+        if (!updatePatient.getEmail().equals(email) && patientOptional.isPresent()) {
             throw new PatientExistsException("Any user have a such email");
         }
         if (updatePatient.getBirthday() == null || updatePatient.getEmail() == null
