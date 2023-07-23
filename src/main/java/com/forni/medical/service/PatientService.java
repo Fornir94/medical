@@ -1,13 +1,15 @@
 package com.forni.medical.service;
 
+import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientEditDTO;
-import com.forni.medical.exception.PatientExistsException;
-import com.forni.medical.exception.IllegalPatientDataException;
-import com.forni.medical.exception.PatientNotFoundException;
+import com.forni.medical.exception.patientexception.PatientExistsException;
+import com.forni.medical.exception.patientexception.IllegalPatientDataException;
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
+import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
-import com.forni.medical.model.dto.PatientDTO;
+import com.forni.medical.model.dto.PatientDTO;;
 import com.forni.medical.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class PatientService {
 
     private final PatientRepository patientRepository;
     private final PatientMapper patientMapper;
+    private final VisitMapper visitMapper;
 
     public PatientDTO patientByEmail(String email) {
         return patientRepository.findByEmail(email).stream()
@@ -32,9 +35,9 @@ public class PatientService {
 
     public PatientDTO update(String email, PatientEditDTO updatePatient) {
         Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
-        Optional<Patient> patient1 = patientRepository.findByEmail(updatePatient.getEmail());
+        Optional<Patient> patientOptional = patientRepository.findByEmail(updatePatient.getEmail());
 
-        if (!updatePatient.getEmail().equals(email) && patient1.isPresent()) {
+        if (!updatePatient.getEmail().equals(email) && patientOptional.isPresent()) {
             throw new PatientExistsException("Any user have a such email");
         }
         if (updatePatient.getBirthday() == null || updatePatient.getEmail() == null
@@ -60,7 +63,13 @@ public class PatientService {
         return patientRepository.findAll().stream()
                 .map(patientMapper::toDto)
                 .collect(Collectors.toList());
+    }
 
+    public List<VisitDTO> allPatientVisits(String email){
+        Patient patient = patientRepository.findByEmail(email).orElseThrow(()->new PatientNotFoundException("Patient not found"));
+        return patient.getVisits().stream()
+                .map(visitMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     public PatientDTO addNewPatient(PatientCreationDTO patientCreationDTO) {

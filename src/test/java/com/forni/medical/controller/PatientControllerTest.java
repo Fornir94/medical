@@ -53,6 +53,15 @@ public class PatientControllerTest {
     }
 
     @Test
+    void getPatientsVisits_VisitsExists_VisitsReturned() throws Exception{
+        mockMvc.perform(get("/patients/misiakasia@gmail.com/visits"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
     @Rollback
     void addPatient_DataCorrect_PatientAddToBase() throws Exception {
         PatientCreationDTO patientCreationDTO = PatientCreationDTO.builder()

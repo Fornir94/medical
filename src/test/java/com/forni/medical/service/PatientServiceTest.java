@@ -1,8 +1,8 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.IllegalPatientDataException;
-import com.forni.medical.exception.PatientExistsException;
-import com.forni.medical.exception.PatientNotFoundException;
+import com.forni.medical.exception.patientexception.IllegalPatientDataException;
+import com.forni.medical.exception.patientexception.PatientExistsException;
+import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientDTO;
@@ -88,7 +88,7 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(PatientExistsException.class, () -> patientService.addNewPatient(patientCreationDTO));
         //Then
         Assertions.assertEquals("Patient with this email already exists", result.getMessage());
-        Assertions.assertEquals(HttpStatus.IM_USED, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
@@ -258,7 +258,7 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(PatientExistsException.class, () -> patientService.update("lol", patientEditDTO));
         //Then
         Assertions.assertEquals("Any user have a such email", result.getMessage());
-        Assertions.assertEquals(HttpStatus.IM_USED, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 
     @Test
@@ -273,6 +273,6 @@ public class PatientServiceTest {
         var result = Assertions.assertThrows(IllegalPatientDataException.class, () -> patientService.update("lol", patientEditDTO));
         //Then
         Assertions.assertEquals("Changing ID card number, or add null  is not allowed!", result.getMessage());
-        Assertions.assertEquals(HttpStatus.FORBIDDEN, result.getHttpStatus());
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
     }
 }

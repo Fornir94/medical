@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +26,8 @@ public class Patient {
     private String lastName;
     private String phoneNumber;
     private LocalDate birthday;
+    @OneToMany(mappedBy = "patient")
+    private List<Visit> visits;
 
     public void update(PatientEditDTO patientEditDTO){
         this.email = patientEditDTO.getEmail();
