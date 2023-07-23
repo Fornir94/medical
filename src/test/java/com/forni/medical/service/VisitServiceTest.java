@@ -2,10 +2,8 @@ package com.forni.medical.service;
 
 import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitExistsException;
 import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
-import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.VisitCreationDTO;
@@ -47,11 +45,15 @@ public class VisitServiceTest {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
         visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visitCreationDTO.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
         Visit visit = new Visit();
         visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visit.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
         VisitDTO visitDTO = new VisitDTO();
         visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
-        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
+        visitDTO.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
+        List<Visit> visits = new ArrayList<>();
+        Mockito.when(visitRepository.findAllOverlapping(eq(visitCreationDTO.getVisitStartDate()), eq(visitCreationDTO.getVisitEndDate()))).thenReturn(visits);
         Mockito.when(visitMapper.toEntity(eq(visitCreationDTO))).thenReturn(visit);
         Mockito.when(visitRepository.save(eq(visit))).thenReturn(visit);
         Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
@@ -62,36 +64,10 @@ public class VisitServiceTest {
     }
 
     @Test
-    void addVisit_VisitWithGivenDateExists_ExceptionThrow() {
-        //Given
-        VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.of(new Visit()));
-        //When
-        var result = Assertions.assertThrows(VisitExistsException.class, () -> visitService.addVisit(visitCreationDTO));
-        //Then
-        Assertions.assertEquals("Visit with this date already exists", result.getMessage());
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
-    }
-
-    @Test
-    void addVisit_VisitDataCreationIsBeforeThenNow_ExceptionThrow() {
-        //Given
-        VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
-        visitCreationDTO.setVisitStartDate(LocalDateTime.of(2022, 12, 10, 17, 30, 0));
-        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
-        //When
-        var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
-        //Then
-        Assertions.assertEquals("Visit with this date is before then actual, or time is different than a full quarter of an hour", result.getMessage());
-        Assertions.assertEquals(HttpStatus.BAD_REQUEST, result.getHttpStatus());
-    }
-
-    @Test
     void addVisit_VisitDataCreationIsNotQuaterOfAnHour_ExceptionThrow() {
         //Given
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
         visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 25, 0));
-        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
         //When
         var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
         //Then
@@ -110,8 +86,7 @@ public class VisitServiceTest {
         visits.add(visit);
         visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 0, 0));
         visit.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 0, 0));
-        Mockito.when(visitRepository.findByVisitStartDate(eq(visitCreationDTO.getVisitStartDate()))).thenReturn(Optional.empty());
-        Mockito.when(visitRepository.findAllOverLapping(eq(visitCreationDTO.getVisitStartDate()),eq(visitCreationDTO.getVisitEndDate()))).thenReturn(visits);
+        Mockito.when(visitRepository.findAllOverlapping(eq(visitCreationDTO.getVisitStartDate()),eq(visitCreationDTO.getVisitEndDate()))).thenReturn(visits);
         //When
         var result = Assertions.assertThrows(VisitDateException.class, () -> visitService.addVisit(visitCreationDTO));
         //Then

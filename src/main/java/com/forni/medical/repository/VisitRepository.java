@@ -10,11 +10,13 @@ import java.util.Optional;
 
 public interface VisitRepository extends JpaRepository<Visit, Long> {
 
-    @Query("select v" +
-    "from Visit v" +
-    "Where v.visitStartDate <= :visitEndDate" +
-    "and v.visitEndDate >= :visitStartDate")
-    List<Visit> findAllOverLapping(LocalDateTime visitStartDate, LocalDateTime visitEndDate);
+    @Query("SELECT v " +
+            "FROM Visit v " +
+            "WHERE v.visitStartDate <= :visitEndDate " +
+            "AND v.visitEndDate >= :visitStartDate")
+    List<Visit> findAllOverlapping(LocalDateTime visitStartDate, LocalDateTime visitEndDate);
+
     Optional<Visit> findById(Long id);
+
     Optional<Visit> findByVisitStartDate(LocalDateTime visitStartDate);
 }

@@ -5,7 +5,6 @@ import com.forni.medical.exception.MedicalException;
 import com.forni.medical.exception.patientexception.PatientExistsException;
 import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitExistsException;
 import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +37,6 @@ public class GeneralExceptionHandler{
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> patientExceptionErrorResponse(RuntimeException e){
         return ResponseEntity.status(500).body("Unknown error exception");
-    }
-
-    @ExceptionHandler(VisitExistsException.class)
-    public ResponseEntity<String> visitExceptionErrorResponse(VisitExistsException e){
-        return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
     @ExceptionHandler(VisitNotFoundException.class)

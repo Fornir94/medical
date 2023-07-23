@@ -2,10 +2,8 @@ package com.forni.medical.service;
 
 import com.forni.medical.exception.patientexception.PatientNotFoundException;
 import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitExistsException;
 import com.forni.medical.exception.visitexception.VisitBookedException;
 import com.forni.medical.exception.visitexception.VisitNotFoundException;
-import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,14 +27,10 @@ public class VisitService {
     private final PatientRepository patientRepository;
 
     public VisitDTO addVisit(VisitCreationDTO visitCreationDTO) {
-        Optional<Visit> visitOptional = visitRepository.findByVisitStartDate(visitCreationDTO.getVisitStartDate());
-        if (visitOptional.isPresent()) {
-            throw new VisitExistsException("Visit with this date already exists");
-        }
         if (visitCreationDTO.getVisitStartDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getVisitStartDate().getMinute() % 15 != 0) {
             throw new VisitDateException("Visit with this date is before then actual, or time is different than a full quarter of an hour");
         }
-        List<Visit> checkVisit = visitRepository.findAllOverLapping(visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate());
+        List<Visit> checkVisit = visitRepository.findAllOverlapping(visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate());
         if (!checkVisit.isEmpty()){
             throw new VisitDateException("The time of the visit coincides with another visit");
         }
