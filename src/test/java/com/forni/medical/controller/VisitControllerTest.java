@@ -39,7 +39,7 @@ public class VisitControllerTest {
                 .andExpect(status().is(200))
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$", hasSize(4)))
-                .andExpect(jsonPath("$[0].visitDate").value("2024-07-20T17:30:00"));
+                .andExpect(jsonPath("$[0].visitStartDate").value("2024-07-20T17:30:00"));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class VisitControllerTest {
         mockMvc.perform(get("/visits/1"))
                 .andDo(print())
                 .andExpect(status().is(200))
-                .andExpect(jsonPath("$.visitDate").value("2024-07-20T17:30:00"));
+                .andExpect(jsonPath("$.visitStartDate").value("2024-07-20T17:30:00"));
     }
 
     @Test

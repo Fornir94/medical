@@ -45,3 +45,43 @@ INSERT INTO visit (visit_Start_Date, visit_End_Date, patient_id)
 VALUES ('2024-07-20T19:30:00', '2024-07-20T20:30:00', null);
 INSERT INTO visit (visit_Start_Date, visit_End_Date, patient_id)
 VALUES ('2024-07-20T20:30:00', '2024-07-20T21:30:00', null);
+
+CREATE TABLE IF NOT EXISTS facility (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  facility_Name VARCHAR(255),
+  city VARCHAR(255),
+  post_Code VARCHAR(255),
+  street VARCHAR(255),
+  street_Number VARCHAR(255)
+);
+
+INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+VALUES ('Palcowka lodz', 'LODZ', '99-999', 'sieniekwicza', '20b');
+INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+VALUES ('Palcowka kato', 'katowice', '96-999', 'sieniekwicza', '19b');
+INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+VALUES ('Palcowka gdansk', 'gdansk', '94-999', 'sieniekwicza', '18b');
+INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+VALUES ('Palcowka radom', 'radom', '93-999', 'sieniekwicza', '17b');
+INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+VALUES ('Palcowka krakow', 'krakow', '92-999', 'sieniekwicza', '16b');
+
+CREATE TABLE IF NOT EXISTS doctor (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  specialization VARCHAR(255),
+  first_Name VARCHAR(255),
+  last_Name VARCHAR(255),
+  email VARCHAR(255),
+  password VARCHAR(255)
+);
+
+INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+VALUES ('SURGEON', 'Jaca', 'Kowal', 'jj@lol.pl', 'sdfsdd2');
+INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+VALUES ('NEUROLOGIST', 'Marek', 'Sagan', 'aa@lol.pl', 'sdfsdd2');
+INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+VALUES ('DERMATOLOGIST', 'Mariusz', 'Pawło', 'mp@lol.pl', 'sdfsdd2');
+INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+VALUES ('SURGEON', 'Mateusz', 'Swiatek', 'ms@lol.pl', 'sdfsdd2');
+INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+VALUES ('CARDIOLOGIST', 'Przemek', 'Słupek', 'ps@lol.pl', 'sdfsdd2');

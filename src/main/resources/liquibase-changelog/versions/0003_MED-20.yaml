@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: Fornir94
+      changes:
+        - createTable:
+            tableName: facility
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_facility_id
+                  name: ID
+                  type: int
+              - column:
+                  name: FACILITY_NAME
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: unique_facility_facilityname
+              - column:
+                  name: CITY
+                  type: varchar(50)
+              - column:
+                  name: POST_CODE
+                  type: varchar(50)
+              - column:
+                  name: STREET
+                  type: varchar(50)
+              - column:
+                  name: STREET_NUMBER
+                  type: varchar(50)
+  - changeSet:
+      id: 3
+      author: Fornir94
+      changes:
+        - createTable:
+            tableName: doctor
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_doctor_id
+                  name: ID
+                  type: int
+              - column:
+                  name: SPECIALIZATION
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FIRST_NAME
+                  type: varchar(50)
+              - column:
+                  name: LAST_NAME
+                  type: varchar(50)
+              - column:
+                  name: EMAIL
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PASSWORD
+                  type: varchar(50)
+  - changeSet:
+      id: 4
+      author: Fornir94
+      changes:
+        - createTable:
+            tableName: doctor_facilities
+            columns:
+              - column:
+                  name: DOCTOR_ID
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_doctor_id
+                    reference: doctor
+                    nullable: false
+              - column:
+                  name: FACILITY_ID
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_facility_id
+                    reference: facility
+                    nullable: false

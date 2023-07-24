@@ -31,7 +31,7 @@ public class VisitService {
             throw new VisitDateException("Visit with this date is before then actual, or time is different than a full quarter of an hour");
         }
         List<Visit> checkVisit = visitRepository.findAllOverlapping(visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate());
-        if (!checkVisit.isEmpty()){
+        if (!checkVisit.isEmpty()) {
             throw new VisitDateException("The time of the visit coincides with another visit");
         }
         Visit visit = visitMapper.toEntity(visitCreationDTO);
