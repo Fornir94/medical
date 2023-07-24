@@ -12,7 +12,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FacilityDTO {
 
-    private String facilityName;
+    private String name;
     private String city;
     private String postCode;
     private String street;

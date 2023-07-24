@@ -48,22 +48,22 @@ VALUES ('2024-07-20T20:30:00', '2024-07-20T21:30:00', null);
 
 CREATE TABLE IF NOT EXISTS facility (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  facility_Name VARCHAR(255),
+  name VARCHAR(255),
   city VARCHAR(255),
   post_Code VARCHAR(255),
   street VARCHAR(255),
   street_Number VARCHAR(255)
 );
 
-INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+INSERT INTO facility (name, city, post_Code, street, street_Number)
 VALUES ('Palcowka lodz', 'LODZ', '99-999', 'sieniekwicza', '20b');
-INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+INSERT INTO facility (name, city, post_Code, street, street_Number)
 VALUES ('Palcowka kato', 'katowice', '96-999', 'sieniekwicza', '19b');
-INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+INSERT INTO facility (name, city, post_Code, street, street_Number)
 VALUES ('Palcowka gdansk', 'gdansk', '94-999', 'sieniekwicza', '18b');
-INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+INSERT INTO facility (name, city, post_Code, street, street_Number)
 VALUES ('Palcowka radom', 'radom', '93-999', 'sieniekwicza', '17b');
-INSERT INTO facility (facility_Name, city, post_Code, street, street_Number)
+INSERT INTO facility (name, city, post_Code, street, street_Number)
 VALUES ('Palcowka krakow', 'krakow', '92-999', 'sieniekwicza', '16b');
 
 CREATE TABLE IF NOT EXISTS doctor (

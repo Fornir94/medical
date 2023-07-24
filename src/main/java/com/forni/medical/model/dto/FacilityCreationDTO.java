@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FacilityCreationDTO {
 
-    private String facilityName;
+    private String name;
     private String city;
     private String postCode;
     private String street;

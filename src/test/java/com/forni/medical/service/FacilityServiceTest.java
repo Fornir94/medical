@@ -35,12 +35,12 @@ public class FacilityServiceTest {
     void addFacility_DaraCorrect_FacilityCreated() {
         //Given
         FacilityCreationDTO facilityCreationDTO = new FacilityCreationDTO();
-        facilityCreationDTO.setFacilityName("lol");
+        facilityCreationDTO.setName("lol");
         FacilityDTO facilityDTO = new FacilityDTO();
-        facilityDTO.setFacilityName("lol");
+        facilityDTO.setName("lol");
         Facility facility = new Facility();
-        facility.setFacilityName("lol");
-        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getFacilityName()))).thenReturn(Optional.empty());
+        facility.setName("lol");
+        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.empty());
         Mockito.when(facilityMapper.toEntity(eq(facilityCreationDTO))).thenReturn(facility);
         Mockito.when(facilityRepository.save(eq(facility))).thenReturn(facility);
         Mockito.when(facilityMapper.toDto(eq(facility))).thenReturn(facilityDTO);
@@ -54,8 +54,8 @@ public class FacilityServiceTest {
     void addFacility_FacilityWithThisNameExists_ExceptionThrow() {
         //Given
         FacilityCreationDTO facilityCreationDTO = new FacilityCreationDTO();
-        facilityCreationDTO.setFacilityName("lol");
-        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getFacilityName()))).thenReturn(Optional.of(new Facility()));
+        facilityCreationDTO.setName("lol");
+        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.of(new Facility()));
         //When
         var result = Assertions.assertThrows(FacilityExistsException.class, () -> facilityService.addFacility(facilityCreationDTO));
         //Then
@@ -68,15 +68,15 @@ public class FacilityServiceTest {
         //Given
         List<Facility> facilityList = new ArrayList<>();
         Facility facility = new Facility();
-        facility.setFacilityName("lol");
+        facility.setName("lol");
         Facility facility1 = new Facility();
-        facility1.setFacilityName("xd");
+        facility1.setName("xd");
         facilityList.add(facility1);
         facilityList.add(facility);
         FacilityDTO facilityDTO = new FacilityDTO();
-        facilityDTO.setFacilityName("lol");
+        facilityDTO.setName("lol");
         FacilityDTO facilityDTO1 = new FacilityDTO();
-        facilityDTO1.setFacilityName("xd");
+        facilityDTO1.setName("xd");
         Mockito.when(facilityRepository.findAll()).thenReturn(facilityList);
         Mockito.when(facilityMapper.toDto(eq(facility))).thenReturn(facilityDTO);
         Mockito.when(facilityMapper.toDto(eq(facility1))).thenReturn(facilityDTO1);
@@ -84,7 +84,7 @@ public class FacilityServiceTest {
         var result = facilityService.getAllFacility();
         //Then
         Assertions.assertEquals(2, result.size());
-        Assertions.assertEquals("xd", result.get(0).getFacilityName());
-        Assertions.assertEquals("lol", result.get(1).getFacilityName());
+        Assertions.assertEquals("xd", result.get(0).getName());
+        Assertions.assertEquals("lol", result.get(1).getName());
     }
 }

@@ -21,7 +21,7 @@ public class FacilityService {
     private final FacilityMapper facilityMapper;
 
     public FacilityDTO addFacility(FacilityCreationDTO facilityCreationDTO) {
-        Optional<Facility> facilityOptional = facilityRepository.findByfacilityName(facilityCreationDTO.getFacilityName());
+        Optional<Facility> facilityOptional = facilityRepository.findByfacilityName(facilityCreationDTO.getName());
         if (facilityOptional.isPresent()) {
             throw new FacilityExistsException("Facility with this name already exists");
         }

@@ -2,6 +2,7 @@ package com.forni.medical.service;
 
 import com.forni.medical.exception.doctoreception.DoctorExistsException;
 import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
+import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
 import com.forni.medical.exception.facilityexception.FacilityExistsException;
 import com.forni.medical.mapper.DoctorMapper;
 import com.forni.medical.mapper.FacilityMapper;
@@ -44,7 +45,7 @@ public class DoctorService {
     }
 
     public FacilityDTO addDoctorToFacility(Long facilityId, Long doctorId) {
-        Facility facility = facilityRepository.findById(facilityId).orElseThrow(() -> new FacilityExistsException("Facility not found"));
+        Facility facility = facilityRepository.findById(facilityId).orElseThrow(() -> new FacilitiesNotFoundException("Facility not found"));
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
         if (doctorRepository.isDoctorAddToFacility(doctorId, facilityId)) {
             throw new DoctorExistsException("Doctor in this facility already exists");
