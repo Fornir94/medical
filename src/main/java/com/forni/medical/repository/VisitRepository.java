@@ -17,6 +17,4 @@ public interface VisitRepository extends JpaRepository<Visit, Long> {
     List<Visit> findAllOverlapping(LocalDateTime visitStartDate, LocalDateTime visitEndDate);
 
     Optional<Visit> findById(Long id);
-
-    Optional<Visit> findByVisitStartDate(LocalDateTime visitStartDate);
 }

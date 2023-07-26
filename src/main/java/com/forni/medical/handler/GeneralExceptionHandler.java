@@ -74,7 +74,7 @@ public class GeneralExceptionHandler {
     }
 
     @ExceptionHandler(DoctorNotFoundException.class)
-    public ResponseEntity<String> doctorExceptionResponse(DoctorNotFoundException e){
+    public ResponseEntity<String> doctorExceptionResponse(DoctorNotFoundException e) {
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 }

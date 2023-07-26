@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Fornir94
+      changes:
+        - addColumn:
+            tableName: visit
+            columns:
+              - column:
+                  name: DOCTOR_ID
+                  type: int
+

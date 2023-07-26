@@ -29,8 +29,6 @@ public class VisitControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private VisitController visitController;
 
     @Test
     void getAllVisit_DataCorrect_VisitsReturned() throws Exception {
@@ -68,7 +66,7 @@ public class VisitControllerTest {
 
     @Test
     @Rollback
-    void addPatientToVisit_DataCorrect_PatientAdd() throws Exception{
+    void addPatientToVisit_DataCorrect_PatientAdd() throws Exception {
         mockMvc.perform(patch("/visits/1/patient/1"))
                 .andDo(print())
                 .andExpect(status().is(200))
@@ -77,7 +75,16 @@ public class VisitControllerTest {
 
     @Test
     @Rollback
-    void deleteVisit_DataCorrect_VisitDeleted() throws Exception{
+    void addDoctorToVisit_DataCorrect_DoctorAdd() throws Exception {
+        mockMvc.perform(patch("/visits/1/doctor/1"))
+                .andDo(print())
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.doctorId").value(1L));
+    }
+
+    @Test
+    @Rollback
+    void deleteVisit_DataCorrect_VisitDeleted() throws Exception {
         mockMvc.perform(delete("/visits/1"))
                 .andDo(print())
                 .andExpect(status().is(200));

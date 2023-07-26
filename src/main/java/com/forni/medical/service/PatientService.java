@@ -65,8 +65,8 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
-    public List<VisitDTO> allPatientVisits(String email){
-        Patient patient = patientRepository.findByEmail(email).orElseThrow(()->new PatientNotFoundException("Patient not found"));
+    public List<VisitDTO> allPatientVisits(String email) {
+        Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
         return patient.getVisits().stream()
                 .map(visitMapper::toDto)
                 .collect(Collectors.toList());
@@ -78,7 +78,7 @@ public class PatientService {
             throw new PatientExistsException("Patient with this email already exists");
         }
         Patient patient = patientMapper.toEntity(patientCreationDTO);
-         return patientMapper.toDto(patientRepository.save(patient));
+        return patientMapper.toDto(patientRepository.save(patient));
     }
 
     public void deletePatient(String email) {

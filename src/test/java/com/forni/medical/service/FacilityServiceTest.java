@@ -1,9 +1,13 @@
 package com.forni.medical.service;
 
+import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
 import com.forni.medical.exception.facilityexception.FacilityExistsException;
+import com.forni.medical.mapper.DoctorMapper;
 import com.forni.medical.mapper.FacilityMapper;
+import com.forni.medical.model.dto.DoctorDTO;
 import com.forni.medical.model.dto.FacilityCreationDTO;
 import com.forni.medical.model.dto.FacilityDTO;
+import com.forni.medical.model.entity.Doctor;
 import com.forni.medical.model.entity.Facility;
 import com.forni.medical.repository.FacilityRepository;
 import org.junit.jupiter.api.Assertions;
@@ -28,6 +32,8 @@ public class FacilityServiceTest {
     FacilityMapper facilityMapper;
     @Mock
     FacilityRepository facilityRepository;
+    @Mock
+    DoctorMapper doctorMapper;
     @InjectMocks
     FacilityService facilityService;
 
@@ -40,7 +46,7 @@ public class FacilityServiceTest {
         facilityDTO.setName("lol");
         Facility facility = new Facility();
         facility.setName("lol");
-        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.empty());
+        Mockito.when(facilityRepository.findByName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.empty());
         Mockito.when(facilityMapper.toEntity(eq(facilityCreationDTO))).thenReturn(facility);
         Mockito.when(facilityRepository.save(eq(facility))).thenReturn(facility);
         Mockito.when(facilityMapper.toDto(eq(facility))).thenReturn(facilityDTO);
@@ -55,7 +61,7 @@ public class FacilityServiceTest {
         //Given
         FacilityCreationDTO facilityCreationDTO = new FacilityCreationDTO();
         facilityCreationDTO.setName("lol");
-        Mockito.when(facilityRepository.findByfacilityName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.of(new Facility()));
+        Mockito.when(facilityRepository.findByName(eq(facilityCreationDTO.getName()))).thenReturn(Optional.of(new Facility()));
         //When
         var result = Assertions.assertThrows(FacilityExistsException.class, () -> facilityService.addFacility(facilityCreationDTO));
         //Then
@@ -86,5 +92,42 @@ public class FacilityServiceTest {
         Assertions.assertEquals(2, result.size());
         Assertions.assertEquals("xd", result.get(0).getName());
         Assertions.assertEquals("lol", result.get(1).getName());
+    }
+
+    @Test
+    void getAllFacilityDoctors_DataCorrect_DoctorsReturned() {
+        List<Facility> facilityList = new ArrayList<>();
+        Facility facility = new Facility();
+        facility.setName("lol");
+        facility.setId(1L);
+        facilityList.add(facility);
+        List<Doctor> doctors = new ArrayList<>();
+        Doctor doctor = new Doctor();
+        doctor.setId(1L);
+        doctor.setFacilities(facilityList);
+        doctors.add(doctor);
+        DoctorDTO doctorDTO = new DoctorDTO();
+        doctorDTO.setId(1L);
+        Mockito.when(facilityRepository.findById(eq(1L))).thenReturn(Optional.of(facility));
+        Mockito.when(facilityRepository.findDoctorsByFacilityId(eq(1L))).thenReturn(doctors);
+        Mockito.when(doctorMapper.toDto(eq(doctor))).thenReturn(doctorDTO);
+
+        var result = facilityService.getAllFacilityDoctors(1L);
+
+        Assertions.assertEquals(1, result.size());
+        Assertions.assertEquals(1L, result.get(0).getId());
+    }
+
+    @Test
+    void getAllFacilityDoctors_FacilityNotFound_ExceptionThrow() {
+        Facility facility = new Facility();
+        facility.setName("lol");
+        facility.setId(1L);
+        Mockito.when(facilityRepository.findById(eq(1L))).thenReturn(Optional.empty());
+
+        var result = Assertions.assertThrows(FacilitiesNotFoundException.class, () -> facilityService.getAllFacilityDoctors(1L));
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
+        Assertions.assertEquals("Facility not found", result.getMessage());
     }
 }

@@ -68,20 +68,20 @@ VALUES ('Palcowka krakow', 'krakow', '92-999', 'sieniekwicza', '16b');
 
 CREATE TABLE IF NOT EXISTS doctor (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  specialization VARCHAR(255),
+  specialization VARCHAR(255) NOT NULL,
   first_Name VARCHAR(255),
   last_Name VARCHAR(255),
   email VARCHAR(255),
   password VARCHAR(255)
 );
 
-INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+INSERT INTO doctor (specialization, first_Name, last_Name, email, password)
 VALUES ('SURGEON', 'Jaca', 'Kowal', 'jj@lol.pl', 'sdfsdd2');
-INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
-VALUES ('NEUROLOGIST', 'Marek', 'Sagan', 'aa@lol.pl', 'sdfsdd2');
-INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
-VALUES ('DERMATOLOGIST', 'Mariusz', 'Pawło', 'mp@lol.pl', 'sdfsdd2');
-INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
+INSERT INTO doctor (specialization, first_Name, last_Name, email, password)
+VALUES ('SURGEON', 'Marek', 'Sagan', 'aa@lol.pl', 'sdfsdd2');
+INSERT INTO doctor (specialization, first_Name, last_Name, email, password)
+VALUES ('SURGEON', 'Mariusz', 'Pawło', 'mp@lol.pl', 'sdfsdd2');
+INSERT INTO doctor (specialization, first_Name, last_Name, email, password)
 VALUES ('SURGEON', 'Mateusz', 'Swiatek', 'ms@lol.pl', 'sdfsdd2');
-INSERT INTO doctor(specialization, first_Name, last_Name, email, password)
-VALUES ('CARDIOLOGIST', 'Przemek', 'Słupek', 'ps@lol.pl', 'sdfsdd2');
+INSERT INTO doctor (specialization, first_Name, last_Name, email, password)
+VALUES ('SURGEON', 'Przemek', 'Słupek', 'ps@lol.pl', 'sdfsdd2');

@@ -20,7 +20,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     unique: true
-                    uniqueConstraintName: unique_facility_facilityname
+                    uniqueConstraintName: unique_facility_name
               - column:
                   name: CITY
                   type: varchar(50)
@@ -33,10 +33,6 @@ databaseChangeLog:
               - column:
                   name: STREET_NUMBER
                   type: varchar(50)
-  - changeSet:
-      id: 3
-      author: Fornir94
-      changes:
         - createTable:
             tableName: doctor
             columns:
@@ -67,10 +63,6 @@ databaseChangeLog:
               - column:
                   name: PASSWORD
                   type: varchar(50)
-  - changeSet:
-      id: 4
-      author: Fornir94
-      changes:
         - createTable:
             tableName: doctor_facilities
             columns:

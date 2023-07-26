@@ -1,8 +1,6 @@
 package com.forni.medical.controller;
 
-import com.forni.medical.model.dto.DoctorCreationDTO;
-import com.forni.medical.model.dto.DoctorDTO;
-import com.forni.medical.model.dto.FacilityDTO;
+import com.forni.medical.model.dto.*;
 import com.forni.medical.service.DoctorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +16,21 @@ public class DoctorController {
     @GetMapping
     public List<DoctorDTO> getAllDoctors() {
         return doctorService.getAllDoctors();
+    }
+
+    @GetMapping("/{doctorId}/facilities")
+    public List<FacilityDTO> getDoctorFacilities(@PathVariable Long doctorId) {
+        return doctorService.getAllDoctorFacilities(doctorId);
+    }
+
+    @GetMapping("/{doctorId}/visits")
+    public List<VisitDTO> getDoctorVisits(@PathVariable Long doctorId) {
+        return doctorService.getAllDoctorVisits(doctorId);
+    }
+
+    @GetMapping("/{doctorId}/patients")
+    public List<PatientDTO> getAllDoctorPatients(@PathVariable Long doctorId) {
+        return doctorService.getAllDoctorPatients(doctorId);
     }
 
     @PostMapping
