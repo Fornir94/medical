@@ -7,6 +7,9 @@ databaseChangeLog:
             tableName: visit
             columns:
               - column:
+                  constraints:
+                    foreignKeyName: fk_doctor_id
+                    reference: doctor
                   name: DOCTOR_ID
                   type: int
 

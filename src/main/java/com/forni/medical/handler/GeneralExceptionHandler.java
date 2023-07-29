@@ -1,16 +1,16 @@
 package com.forni.medical.handler;
 
-import com.forni.medical.exception.doctoreception.DoctorExistsException;
-import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
-import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
-import com.forni.medical.exception.facilityexception.FacilityExistsException;
-import com.forni.medical.exception.patientexception.IllegalPatientDataException;
+import com.forni.medical.exception.doctor.DoctorExistsException;
+import com.forni.medical.exception.doctor.DoctorNotFoundException;
+import com.forni.medical.exception.facility.FacilitiesNotFoundException;
+import com.forni.medical.exception.facility.FacilityExistsException;
+import com.forni.medical.exception.patient.IllegalPatientDataException;
 import com.forni.medical.exception.MedicalException;
-import com.forni.medical.exception.patientexception.PatientExistsException;
-import com.forni.medical.exception.patientexception.PatientNotFoundException;
-import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitBookedException;
-import com.forni.medical.exception.visitexception.VisitNotFoundException;
+import com.forni.medical.exception.patient.PatientExistsException;
+import com.forni.medical.exception.patient.PatientNotFoundException;
+import com.forni.medical.exception.visit.VisitDateException;
+import com.forni.medical.exception.visit.VisitBookedException;
+import com.forni.medical.exception.visit.VisitNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,7 +1,7 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
-import com.forni.medical.exception.facilityexception.FacilityExistsException;
+import com.forni.medical.exception.facility.FacilitiesNotFoundException;
+import com.forni.medical.exception.facility.FacilityExistsException;
 import com.forni.medical.mapper.DoctorMapper;
 import com.forni.medical.mapper.FacilityMapper;
 import com.forni.medical.model.dto.DoctorDTO;

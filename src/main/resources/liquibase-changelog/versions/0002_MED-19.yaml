@@ -32,4 +32,4 @@ databaseChangeLog:
                   type: int
                   constraints:
                     foreignKeyName: fk_patient_id
-                    references: patient
+                    reference: patient

@@ -1,11 +1,11 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.doctoreception.DoctorExistsException;
-import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
-import com.forni.medical.exception.patientexception.PatientNotFoundException;
-import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitBookedException;
-import com.forni.medical.exception.visitexception.VisitNotFoundException;
+import com.forni.medical.exception.doctor.DoctorExistsException;
+import com.forni.medical.exception.doctor.DoctorNotFoundException;
+import com.forni.medical.exception.patient.PatientNotFoundException;
+import com.forni.medical.exception.visit.VisitDateException;
+import com.forni.medical.exception.visit.VisitBookedException;
+import com.forni.medical.exception.visit.VisitNotFoundException;
 import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;

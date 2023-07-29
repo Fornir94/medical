@@ -1,11 +1,11 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.doctoreception.DoctorExistsException;
-import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
-import com.forni.medical.exception.patientexception.PatientNotFoundException;
-import com.forni.medical.exception.visitexception.VisitDateException;
-import com.forni.medical.exception.visitexception.VisitBookedException;
-import com.forni.medical.exception.visitexception.VisitNotFoundException;
+import com.forni.medical.exception.doctor.DoctorExistsException;
+import com.forni.medical.exception.doctor.DoctorNotFoundException;
+import com.forni.medical.exception.patient.PatientNotFoundException;
+import com.forni.medical.exception.visit.VisitDateException;
+import com.forni.medical.exception.visit.VisitBookedException;
+import com.forni.medical.exception.visit.VisitNotFoundException;
 import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.DoctorDTO;
 import com.forni.medical.model.dto.PatientDTO;
@@ -47,18 +47,33 @@ public class VisitServiceTest {
     @Mock
     DoctorRepository doctorRepository;
 
-    @Test
-    void addVisit_DataCorrect_VisitCreated() {
-        //Given
+    private VisitCreationDTO newVisitCreation(){
         VisitCreationDTO visitCreationDTO = new VisitCreationDTO();
         visitCreationDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         visitCreationDTO.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
+        return visitCreationDTO;
+    }
+
+    private Visit newVisit(){
         Visit visit = new Visit();
         visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         visit.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
+        return visit;
+    }
+
+    private VisitDTO newVisitDTO(){
         VisitDTO visitDTO = new VisitDTO();
         visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
         visitDTO.setVisitEndDate(LocalDateTime.of(2024, 12, 10, 18, 30, 0));
+        return visitDTO;
+    }
+
+    @Test
+    void addVisit_DataCorrect_VisitCreated() {
+        //Given
+        VisitCreationDTO visitCreationDTO = newVisitCreation();
+        Visit visit = newVisit();
+        VisitDTO visitDTO = newVisitDTO();
         List<Visit> visits = new ArrayList<>();
         Mockito.when(visitRepository.findAllOverlapping(eq(visitCreationDTO.getVisitStartDate()), eq(visitCreationDTO.getVisitEndDate()))).thenReturn(visits);
         Mockito.when(visitMapper.toEntity(eq(visitCreationDTO))).thenReturn(visit);

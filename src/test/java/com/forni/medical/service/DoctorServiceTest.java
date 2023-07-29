@@ -1,8 +1,8 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.doctoreception.DoctorExistsException;
-import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
-import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
+import com.forni.medical.exception.doctor.DoctorExistsException;
+import com.forni.medical.exception.doctor.DoctorNotFoundException;
+import com.forni.medical.exception.facility.FacilitiesNotFoundException;
 import com.forni.medical.mapper.DoctorMapper;
 import com.forni.medical.mapper.FacilityMapper;
 import com.forni.medical.mapper.PatientMapper;
@@ -242,19 +242,16 @@ public class DoctorServiceTest {
     void getAllDoctorPatients_DataCorrect_PatientsReturned() {
         Doctor doctor = new Doctor();
         doctor.setId(1L);
-        Visit visit = new Visit();
-        visit.setId(1L);
-        List<Visit> visits = new ArrayList<>();
-        visits.add(visit);
         Patient patient = new Patient();
         patient.setEmail("lol");
         patient.setId(1L);
+        List<Patient> patients = new ArrayList<>();
+        patients.add(patient);
         PatientDTO patientDTO = new PatientDTO();
         patientDTO.setEmail("lol");
         patientDTO.setId(1L);
-        visit.setPatient(patient);
         Mockito.when(doctorRepository.findById(eq(1L))).thenReturn(Optional.of(doctor));
-        Mockito.when(doctorRepository.findVisitsByDoctorId(eq(1L))).thenReturn(visits);
+        Mockito.when(doctorRepository.findAllPatientsByDoctorId(eq(1L))).thenReturn(patients);
         Mockito.when(patientMapper.toDto(eq(patient))).thenReturn(patientDTO);
 
         var result = doctorService.getAllDoctorPatients(1L);

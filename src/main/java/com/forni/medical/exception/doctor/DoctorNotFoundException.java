@@ -1,4 +1,4 @@
-package com.forni.medical.exception.doctoreception;
+package com.forni.medical.exception.doctor;
 
 import com.forni.medical.exception.MedicalException;
 import org.springframework.http.HttpStatus;

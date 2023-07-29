@@ -1,8 +1,8 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.doctoreception.DoctorExistsException;
-import com.forni.medical.exception.doctoreception.DoctorNotFoundException;
-import com.forni.medical.exception.facilityexception.FacilitiesNotFoundException;
+import com.forni.medical.exception.doctor.DoctorExistsException;
+import com.forni.medical.exception.doctor.DoctorNotFoundException;
+import com.forni.medical.exception.facility.FacilitiesNotFoundException;
 import com.forni.medical.mapper.DoctorMapper;
 import com.forni.medical.mapper.FacilityMapper;
 import com.forni.medical.mapper.PatientMapper;
@@ -10,7 +10,6 @@ import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.*;
 import com.forni.medical.model.entity.Doctor;
 import com.forni.medical.model.entity.Facility;
-import com.forni.medical.model.entity.Visit;
 import com.forni.medical.repository.DoctorRepository;
 import com.forni.medical.repository.FacilityRepository;
 import lombok.RequiredArgsConstructor;
@@ -73,8 +72,7 @@ public class DoctorService {
 
     public List<PatientDTO> getAllDoctorPatients(Long doctorId) {
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
-        return doctorRepository.findVisitsByDoctorId(doctor.getId()).stream()
-                .map(Visit::getPatient)
+        return doctorRepository.findAllPatientsByDoctorId(doctor.getId()).stream()
                 .map(patientMapper::toDto)
                 .collect(Collectors.toList());
     }
