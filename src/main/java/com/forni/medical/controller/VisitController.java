@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/visits")
 public class VisitController {
 
@@ -29,7 +31,7 @@ public class VisitController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = VisitDTO.class))})})
     @GetMapping
     public ResponseEntity<List<VisitDTO>> getAllVisits() {
-
+        log.info("List of all visits have been returned");
         return ResponseEntity.ok(visitService.getAllVisits());
     }
 
@@ -41,6 +43,7 @@ public class VisitController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<VisitDTO> getVisit(@PathVariable Long id) {
+        log.info("Visit with id: {}, has been returned", id);
         return ResponseEntity.ok(visitService.findVisit(id));
     }
 
@@ -52,6 +55,7 @@ public class VisitController {
     })
     @PostMapping
     public ResponseEntity<VisitDTO> addVisit(@RequestBody VisitCreationDTO visitCreationDTO) {
+        log.info("Visit with: visit's start date: {}, visit's end date: {}, patient: {}, has been add to database", visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate(), visitCreationDTO.getPatient());
         return ResponseEntity.ok(visitService.addVisit(visitCreationDTO));
     }
 
@@ -64,6 +68,7 @@ public class VisitController {
     })
     @PatchMapping("/{id}/patient/{patientId}")
     public ResponseEntity<VisitDTO> addPatientToVisit(@PathVariable Long id, @PathVariable Long patientId) {
+        log.info("Patient with id: {}, has been add to visit with id: {}", patientId, id);
         return ResponseEntity.ok(visitService.addPatientToVisit(id, patientId));
     }
 
@@ -76,6 +81,7 @@ public class VisitController {
     })
     @PatchMapping("/{visitId}/doctor/{doctorId}")
     public ResponseEntity<VisitDTO> addDoctorToVisit(@PathVariable Long visitId, @PathVariable Long doctorId) {
+        log.info("Doctor with id: {}, has been add to visit with id: {}", doctorId, visitId);
         return ResponseEntity.ok(visitService.addDoctorToVisit(visitId, doctorId));
     }
 
@@ -88,5 +94,6 @@ public class VisitController {
     @DeleteMapping("/{id}")
     public void deleteVisit(@PathVariable Long id) {
         visitService.deleteVisit(id);
+        log.info("Visit with id: {}, has been deleted", id);
     }
 }

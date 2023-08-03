@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class VisitCreationDTO {
-    private Long id;
     private LocalDateTime visitStartDate;
     private LocalDateTime visitEndDate;
     private PatientDTO patient;

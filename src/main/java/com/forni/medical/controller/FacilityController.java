@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/facilities")
 public class FacilityController {
 
@@ -31,7 +33,7 @@ public class FacilityController {
     })
     @GetMapping
     public ResponseEntity<List<FacilityDTO>> getAllFacilities() {
-
+        log.info("List od facilities have been returned");
         return ResponseEntity.ok(facilityService.getAllFacility());
     }
 
@@ -43,6 +45,7 @@ public class FacilityController {
     })
     @GetMapping("/{id}/doctors")
     public ResponseEntity<List<DoctorDTO>> getAllFacilityDoctor(@PathVariable Long id) {
+        log.info("All doctors from facility with id: {} , have been returned", id);
         return ResponseEntity.ok(facilityService.getAllFacilityDoctors(id));
     }
 
@@ -54,6 +57,7 @@ public class FacilityController {
     })
     @PostMapping
     public ResponseEntity<FacilityDTO> addFacility(@RequestBody FacilityCreationDTO facilityCreationDTO) {
+        log.info("Facility with: name: {}, city: {}, postcode: {}, street: {}, street number: {}, has been add to database", facilityCreationDTO.getName(), facilityCreationDTO.getCity(), facilityCreationDTO.getPostCode(), facilityCreationDTO.getStreet(), facilityCreationDTO.getStreetNumber());
         return ResponseEntity.ok(facilityService.addFacility(facilityCreationDTO));
     }
 }

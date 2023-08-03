@@ -33,7 +33,7 @@ public class VisitService {
 
     public VisitDTO addVisit(VisitCreationDTO visitCreationDTO) {
         if (visitCreationDTO.getVisitStartDate().isBefore(LocalDateTime.now()) || visitCreationDTO.getVisitStartDate().getMinute() % 15 != 0) {
-            throw new VisitDateException("Visit with this date is before then actual, or time is different than a full quarter of an hour");
+            throw new VisitDateException("Visit with this date: " + visitCreationDTO.getVisitStartDate() + " is before then actual, or time is different than a full quarter of an hour");
         }
         List<Visit> checkVisit = visitRepository.findAllOverlapping(visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate());
         if (!checkVisit.isEmpty()) {
@@ -63,7 +63,7 @@ public class VisitService {
     public VisitDTO addDoctorToVisit(Long visitId, Long doctorId) {
         Visit visit = visitRepository.findById(visitId).orElseThrow(() -> new VisitNotFoundException("Visit not found"));
         if (visit.getDoctor() != null) {
-            throw new DoctorExistsException("The docotor has been already added");
+            throw new DoctorExistsException("The doctor has been already added");
         }
         Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException("Doctor not found"));
         visit.setDoctor(doctor);

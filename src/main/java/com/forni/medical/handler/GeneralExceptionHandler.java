@@ -11,11 +11,13 @@ import com.forni.medical.exception.patient.PatientNotFoundException;
 import com.forni.medical.exception.visit.VisitDateException;
 import com.forni.medical.exception.visit.VisitBookedException;
 import com.forni.medical.exception.visit.VisitNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
+@Slf4j
 public class GeneralExceptionHandler {
 
     @ExceptionHandler(PatientNotFoundException.class)
@@ -25,11 +27,13 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(PatientExistsException.class)
     public ResponseEntity<String> patientExceptionErrorResponse(PatientExistsException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
     @ExceptionHandler(IllegalPatientDataException.class)
     public ResponseEntity<String> patientExceptionErrorResponse(IllegalPatientDataException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
@@ -50,6 +54,7 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(VisitDateException.class)
     public ResponseEntity<String> visitExceptionErrorResponse(VisitDateException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
@@ -60,11 +65,13 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(FacilityExistsException.class)
     public ResponseEntity<String> facilityExceptionResponse(FacilityExistsException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
     @ExceptionHandler(DoctorExistsException.class)
     public ResponseEntity<String> doctorExceptionResponse(DoctorExistsException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 

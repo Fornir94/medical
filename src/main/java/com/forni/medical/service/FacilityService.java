@@ -27,7 +27,7 @@ public class FacilityService {
     public FacilityDTO addFacility(FacilityCreationDTO facilityCreationDTO) {
         Optional<Facility> facilityOptional = facilityRepository.findByName(facilityCreationDTO.getName());
         if (facilityOptional.isPresent()) {
-            throw new FacilityExistsException("Facility with this name already exists");
+            throw new FacilityExistsException("Facility with name: " + facilityCreationDTO.getName() + " already exists");
         }
         Facility facility = facilityMapper.toEntity(facilityCreationDTO);
         return facilityMapper.toDto(facilityRepository.save(facility));

@@ -33,7 +33,7 @@ public class DoctorService {
     public DoctorDTO addDoctor(DoctorCreationDTO doctorCreationDTO) {
         Optional<Doctor> doctorOptional = doctorRepository.findByEmail(doctorCreationDTO.getEmail());
         if (doctorOptional.isPresent()) {
-            throw new DoctorExistsException("Doctor with this email already exists");
+            throw new DoctorExistsException("Doctor with email: " + doctorCreationDTO.getEmail() + "already exists");
         }
         Doctor doctor = doctorMapper.toEntity(doctorCreationDTO);
         return doctorMapper.toDto(doctorRepository.save(doctor));

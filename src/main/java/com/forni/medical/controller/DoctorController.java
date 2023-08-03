@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/doctors")
+@Slf4j
 public class DoctorController {
     private final DoctorService doctorService;
 
@@ -27,7 +29,7 @@ public class DoctorController {
     })
     @GetMapping
     public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
-
+        log.info("List of doctors returned");
         return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
@@ -39,6 +41,7 @@ public class DoctorController {
     })
     @GetMapping("/{doctorId}/facilities")
     public ResponseEntity<List<FacilityDTO>> getDoctorFacilities(@PathVariable Long doctorId) {
+        log.info("Doctor's facilities with id: {} returned", doctorId);
         return ResponseEntity.ok(doctorService.getAllDoctorFacilities(doctorId));
     }
 
@@ -50,6 +53,7 @@ public class DoctorController {
     })
     @GetMapping("/{doctorId}/visits")
     public ResponseEntity<List<VisitDTO>> getDoctorVisits(@PathVariable Long doctorId) {
+        log.info("Doctor's visits with id: {} returned", doctorId);
         return ResponseEntity.ok(doctorService.getAllDoctorVisits(doctorId));
     }
 
@@ -61,7 +65,10 @@ public class DoctorController {
     })
     @GetMapping("/{doctorId}/patients")
     public ResponseEntity<List<PatientDTO>> getAllDoctorPatients(@PathVariable Long doctorId) {
-        return ResponseEntity.ok(doctorService.getAllDoctorPatients(doctorId));
+        log.info("Trying to fetch patients by doctor id: {}", doctorId);
+        var patients = doctorService.getAllDoctorPatients(doctorId);
+        log.info("For doctor with id: {}, found patients:{} ", doctorId, patients);
+        return ResponseEntity.ok(patients);
     }
 
     @Operation(summary = "Add doctor to database", tags = "Doctor")
@@ -72,6 +79,7 @@ public class DoctorController {
     })
     @PostMapping
     public ResponseEntity<DoctorDTO> addDoctor(@RequestBody DoctorCreationDTO doctorCreationDTO) {
+        log.info("Doctor with: specialization: {} , firstname: {} , lastname: {} , email: {} , password: {} , add to database", doctorCreationDTO.getSpecialization(), doctorCreationDTO.getFirstName(), doctorCreationDTO.getLastName(), doctorCreationDTO.getEmail(), doctorCreationDTO.getPassword());
         return ResponseEntity.ok(doctorService.addDoctor(doctorCreationDTO));
     }
 
@@ -84,6 +92,7 @@ public class DoctorController {
     })
     @PatchMapping("/{id}/facility/{facilityId}")
     public ResponseEntity<FacilityDTO> addDoctorToFacility(@PathVariable Long id, @PathVariable Long facilityId) {
+        log.info("Doctor with id: {}, has been add to facility with id: {}", id, facilityId);
         return ResponseEntity.ok(doctorService.addDoctorToFacility(facilityId, id));
     }
 }

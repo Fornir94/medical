@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/patients")
+@Slf4j
 public class PatientController {
     private final PatientService patientService;
 
@@ -29,6 +31,7 @@ public class PatientController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PatientDTO.class))})})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
+        log.info("List with all patients have been returned");
         return ResponseEntity.ok(patientService.allPatients());
     }
 
@@ -40,6 +43,7 @@ public class PatientController {
     })
     @GetMapping("/{email}")
     public ResponseEntity<PatientDTO> getPatientByEmail(@PathVariable String email) {
+        log.info("Patient with email: {} , has been returned", email);
         return ResponseEntity.ok(patientService.patientByEmail(email));
     }
 
@@ -51,6 +55,7 @@ public class PatientController {
     })
     @GetMapping("/{email}/visits")
     public ResponseEntity<List<VisitDTO>> getPatientVisits(@PathVariable String email) {
+        log.info("All visits from patient with email: {} , have been returned", email);
         return ResponseEntity.ok(patientService.allPatientVisits(email));
     }
 
@@ -62,6 +67,7 @@ public class PatientController {
     })
     @PostMapping
     public ResponseEntity<PatientDTO> addPatient(@RequestBody PatientCreationDTO patientCreationDTO) {
+        log.info("Patient with: email: {}, password: {}, idCardNo: {}, firstname: {}, lastname: {}, phone number: {}, birthday: {}, has been add to database", patientCreationDTO.getEmail(), patientCreationDTO.getPassword(), patientCreationDTO.getIdCardNo(), patientCreationDTO.getFirstName(), patientCreationDTO.getLastName(), patientCreationDTO.getPhoneNumber(), patientCreationDTO.getBirthday());
         return ResponseEntity.ok(patientService.addNewPatient(patientCreationDTO));
     }
 
@@ -74,6 +80,7 @@ public class PatientController {
     @DeleteMapping("/{email}")
     public void deletePatient(@PathVariable String email) {
         patientService.deletePatient(email);
+        log.info("Patient with email: {}, has been deleted", email);
     }
 
     @Operation(summary = "Update patient data from database", tags = "Patient")
@@ -85,6 +92,7 @@ public class PatientController {
     })
     @PutMapping("/{email}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable String email, @RequestBody PatientEditDTO updatePatient) {
+        log.info("Patient with email: {}, has been update by: email: {}, password: {}, firstname: {}, lastname: {}, phone number: {}, birthday: {}", email, updatePatient.getEmail(), updatePatient.getPassword(), updatePatient.getFirstName(), updatePatient.getLastName(), updatePatient.getPhoneNumber(), updatePatient.getBirthday());
         return ResponseEntity.ok(patientService.update(email, updatePatient));
     }
 
@@ -97,5 +105,6 @@ public class PatientController {
     @PatchMapping("/{email}")
     public void updatePassword(@PathVariable String email, @RequestBody String password) {
         patientService.updatePassword(email, password);
+        log.info("Patient with email: {}, update his password to: {}", email, password);
     }
 }
