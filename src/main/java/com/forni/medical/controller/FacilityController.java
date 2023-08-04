@@ -3,7 +3,6 @@ package com.forni.medical.controller;
 import com.forni.medical.model.dto.DoctorDTO;
 import com.forni.medical.model.dto.FacilityCreationDTO;
 import com.forni.medical.model.dto.FacilityDTO;
-import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.service.FacilityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,8 +32,10 @@ public class FacilityController {
     })
     @GetMapping
     public ResponseEntity<List<FacilityDTO>> getAllFacilities() {
-        log.info("List od facilities have been returned");
-        return ResponseEntity.ok(facilityService.getAllFacility());
+        log.info("Trying to fetch all facilities");
+        var facilities = facilityService.getAllFacility();
+        log.info("Returned all facilities");
+        return ResponseEntity.ok(facilities);
     }
 
     @Operation(summary = "Get all doctors add to facility", tags = "Facility")
@@ -45,8 +46,10 @@ public class FacilityController {
     })
     @GetMapping("/{id}/doctors")
     public ResponseEntity<List<DoctorDTO>> getAllFacilityDoctor(@PathVariable Long id) {
+        log.info("Trying to fetch all doctor form facility by id: {}", id);
+        var doctors= facilityService.getAllDoctorsFromFacility(id);
         log.info("All doctors from facility with id: {} , have been returned", id);
-        return ResponseEntity.ok(facilityService.getAllFacilityDoctors(id));
+        return ResponseEntity.ok(doctors);
     }
 
     @Operation(summary = "Add facility to database", tags = "Facility")
@@ -57,7 +60,9 @@ public class FacilityController {
     })
     @PostMapping
     public ResponseEntity<FacilityDTO> addFacility(@RequestBody FacilityCreationDTO facilityCreationDTO) {
-        log.info("Facility with: name: {}, city: {}, postcode: {}, street: {}, street number: {}, has been add to database", facilityCreationDTO.getName(), facilityCreationDTO.getCity(), facilityCreationDTO.getPostCode(), facilityCreationDTO.getStreet(), facilityCreationDTO.getStreetNumber());
+        log.info("Trying to add facility to database");
+        var facility = facilityService.addFacility(facilityCreationDTO);
+        log.info("Facility with body: {} ,has been add to database", facilityCreationDTO);
         return ResponseEntity.ok(facilityService.addFacility(facilityCreationDTO));
     }
 }

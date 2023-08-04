@@ -112,7 +112,7 @@ public class FacilityServiceTest {
         Mockito.when(facilityRepository.findDoctorsByFacilityId(eq(1L))).thenReturn(doctors);
         Mockito.when(doctorMapper.toDto(eq(doctor))).thenReturn(doctorDTO);
 
-        var result = facilityService.getAllFacilityDoctors(1L);
+        var result = facilityService.getAllDoctorsFromFacility(1L);
 
         Assertions.assertEquals(1, result.size());
         Assertions.assertEquals(1L, result.get(0).getId());
@@ -125,7 +125,7 @@ public class FacilityServiceTest {
         facility.setId(1L);
         Mockito.when(facilityRepository.findById(eq(1L))).thenReturn(Optional.empty());
 
-        var result = Assertions.assertThrows(FacilitiesNotFoundException.class, () -> facilityService.getAllFacilityDoctors(1L));
+        var result = Assertions.assertThrows(FacilitiesNotFoundException.class, () -> facilityService.getAllDoctorsFromFacility(1L));
 
         Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
         Assertions.assertEquals("Facility not found", result.getMessage());

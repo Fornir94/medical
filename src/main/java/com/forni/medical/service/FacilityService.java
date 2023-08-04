@@ -39,7 +39,7 @@ public class FacilityService {
                 .collect(Collectors.toList());
     }
 
-    public List<DoctorDTO> getAllFacilityDoctors(Long idFacility) {
+    public List<DoctorDTO> getAllDoctorsFromFacility(Long idFacility) {
         Facility facility = facilityRepository.findById(idFacility).orElseThrow(() -> new FacilitiesNotFoundException("Facility not found"));
         return facilityRepository.findDoctorsByFacilityId(facility.getId()).stream()
                 .map(doctorMapper::toDto)

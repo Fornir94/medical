@@ -29,8 +29,10 @@ public class DoctorController {
     })
     @GetMapping
     public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
-        log.info("List of doctors returned");
-        return ResponseEntity.ok(doctorService.getAllDoctors());
+        log.info("Trying to fetch all doctors");
+        var doctors = doctorService.getAllDoctors();
+        log.info("Returned all doctors");
+        return ResponseEntity.ok(doctors);
     }
 
     @Operation(summary = "Get all doctor's facilities", tags = "Doctor")
@@ -41,8 +43,10 @@ public class DoctorController {
     })
     @GetMapping("/{doctorId}/facilities")
     public ResponseEntity<List<FacilityDTO>> getDoctorFacilities(@PathVariable Long doctorId) {
-        log.info("Doctor's facilities with id: {} returned", doctorId);
-        return ResponseEntity.ok(doctorService.getAllDoctorFacilities(doctorId));
+        log.info("Trying to fetch facilities by doctor id: {}", doctorId);
+        var facilities = doctorService.getAllDoctorFacilities(doctorId);
+        log.info("For doctor with id: {}, found patients:{} ", doctorId, facilities);
+        return ResponseEntity.ok(facilities);
     }
 
     @Operation(summary = "Get all doctor's visits", tags = "Doctor")
@@ -53,8 +57,10 @@ public class DoctorController {
     })
     @GetMapping("/{doctorId}/visits")
     public ResponseEntity<List<VisitDTO>> getDoctorVisits(@PathVariable Long doctorId) {
-        log.info("Doctor's visits with id: {} returned", doctorId);
-        return ResponseEntity.ok(doctorService.getAllDoctorVisits(doctorId));
+        log.info("Trying to fetch visits by doctor id: {}", doctorId);
+        var visits = doctorService.getAllDoctorVisits(doctorId);
+        log.info("For doctor with id: {}, found visits:{} ", doctorId, visits);
+        return ResponseEntity.ok(visits);
     }
 
     @Operation(summary = "Get all doctor's patients", tags = "Doctor")
@@ -79,8 +85,10 @@ public class DoctorController {
     })
     @PostMapping
     public ResponseEntity<DoctorDTO> addDoctor(@RequestBody DoctorCreationDTO doctorCreationDTO) {
-        log.info("Doctor with: specialization: {} , firstname: {} , lastname: {} , email: {} , password: {} , add to database", doctorCreationDTO.getSpecialization(), doctorCreationDTO.getFirstName(), doctorCreationDTO.getLastName(), doctorCreationDTO.getEmail(), doctorCreationDTO.getPassword());
-        return ResponseEntity.ok(doctorService.addDoctor(doctorCreationDTO));
+        log.info("Trying to add doctor to database");
+        var doctor = doctorService.addDoctor(doctorCreationDTO);
+        log.info("Doctor add to database with body: {}", doctorCreationDTO);
+        return ResponseEntity.ok(doctor);
     }
 
     @Operation(summary = "Add doctor to facility", tags = "Doctor")
@@ -92,7 +100,9 @@ public class DoctorController {
     })
     @PatchMapping("/{id}/facility/{facilityId}")
     public ResponseEntity<FacilityDTO> addDoctorToFacility(@PathVariable Long id, @PathVariable Long facilityId) {
+        log.info("Trying to add doctor to facility");
+        var facility = doctorService.addDoctorToFacility(facilityId, id);
         log.info("Doctor with id: {}, has been add to facility with id: {}", id, facilityId);
-        return ResponseEntity.ok(doctorService.addDoctorToFacility(facilityId, id));
+        return ResponseEntity.ok(facility);
     }
 }

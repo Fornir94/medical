@@ -1,6 +1,5 @@
 package com.forni.medical.controller;
 
-import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.VisitCreationDTO;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.service.VisitService;
@@ -31,8 +30,10 @@ public class VisitController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = VisitDTO.class))})})
     @GetMapping
     public ResponseEntity<List<VisitDTO>> getAllVisits() {
+        log.info("Trying to fetch all visits");
+        var visits=visitService.getAllVisits();
         log.info("List of all visits have been returned");
-        return ResponseEntity.ok(visitService.getAllVisits());
+        return ResponseEntity.ok(visits);
     }
 
     @Operation(summary = "Get visit by id added to database", tags = "Visit")
@@ -43,8 +44,10 @@ public class VisitController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<VisitDTO> getVisit(@PathVariable Long id) {
+        log.info("Trying to get visit by id: {}", id);
+        var visit=visitService.findVisit(id);
         log.info("Visit with id: {}, has been returned", id);
-        return ResponseEntity.ok(visitService.findVisit(id));
+        return ResponseEntity.ok(visit);
     }
 
     @Operation(summary = "Add visit to database", tags = "Visit")
@@ -55,8 +58,10 @@ public class VisitController {
     })
     @PostMapping
     public ResponseEntity<VisitDTO> addVisit(@RequestBody VisitCreationDTO visitCreationDTO) {
-        log.info("Visit with: visit's start date: {}, visit's end date: {}, patient: {}, has been add to database", visitCreationDTO.getVisitStartDate(), visitCreationDTO.getVisitEndDate(), visitCreationDTO.getPatient());
-        return ResponseEntity.ok(visitService.addVisit(visitCreationDTO));
+        log.info("Trying to add visit to database");
+        var visit = visitService.addVisit(visitCreationDTO);
+        log.info("Visit with body: {}, has been add to database", visitCreationDTO);
+        return ResponseEntity.ok(visit);
     }
 
     @Operation(summary = "Add patient to visit", tags = "Visit")
@@ -68,8 +73,10 @@ public class VisitController {
     })
     @PatchMapping("/{id}/patient/{patientId}")
     public ResponseEntity<VisitDTO> addPatientToVisit(@PathVariable Long id, @PathVariable Long patientId) {
+        log.info("Trying to add patient with id: {}, to visit with id: {}", patientId, id);
+        var visit = visitService.addPatientToVisit(id, patientId);
         log.info("Patient with id: {}, has been add to visit with id: {}", patientId, id);
-        return ResponseEntity.ok(visitService.addPatientToVisit(id, patientId));
+        return ResponseEntity.ok(visit);
     }
 
     @Operation(summary = "Add doctor to visit", tags = "Visit")
@@ -81,8 +88,10 @@ public class VisitController {
     })
     @PatchMapping("/{visitId}/doctor/{doctorId}")
     public ResponseEntity<VisitDTO> addDoctorToVisit(@PathVariable Long visitId, @PathVariable Long doctorId) {
-        log.info("Doctor with id: {}, has been add to visit with id: {}", doctorId, visitId);
-        return ResponseEntity.ok(visitService.addDoctorToVisit(visitId, doctorId));
+        log.info("Trying to add doctor with id: {}, to visit with id: {}", doctorId, visitId);
+        var visit = visitService.addDoctorToVisit(visitId, doctorId);
+        log.info("Doctor with id: {}, has been add to visit with id: {}",doctorId, visitId);
+        return ResponseEntity.ok(visit);
     }
 
     @Operation(summary = "Delete visit form database", tags = "Visit")
@@ -93,6 +102,7 @@ public class VisitController {
     })
     @DeleteMapping("/{id}")
     public void deleteVisit(@PathVariable Long id) {
+        log.info("Trying to delete visit with id: {}, form database", id);
         visitService.deleteVisit(id);
         log.info("Visit with id: {}, has been deleted", id);
     }

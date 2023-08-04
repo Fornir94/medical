@@ -31,8 +31,10 @@ public class PatientController {
                     content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PatientDTO.class))})})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<PatientDTO>> getAllPatients() {
+        log.info("Trying to fetch all patients");
+        var patients = patientService.allPatients();
         log.info("List with all patients have been returned");
-        return ResponseEntity.ok(patientService.allPatients());
+        return ResponseEntity.ok(patients);
     }
 
     @Operation(summary = "Get patient by email added to database", tags = "Patient")
@@ -43,8 +45,10 @@ public class PatientController {
     })
     @GetMapping("/{email}")
     public ResponseEntity<PatientDTO> getPatientByEmail(@PathVariable String email) {
+        log.info("Trying to fetch patient by email: {}", email);
+        var patient=patientService.patientByEmail(email);
         log.info("Patient with email: {} , has been returned", email);
-        return ResponseEntity.ok(patientService.patientByEmail(email));
+        return ResponseEntity.ok(patient);
     }
 
     @Operation(summary = "Get patient visits by an email", tags = "Patient")
@@ -55,8 +59,10 @@ public class PatientController {
     })
     @GetMapping("/{email}/visits")
     public ResponseEntity<List<VisitDTO>> getPatientVisits(@PathVariable String email) {
+        log.info("Trying to fetch all visits from patient by email: {} ", email);
+        var visits = patientService.allPatientVisits(email);
         log.info("All visits from patient with email: {} , have been returned", email);
-        return ResponseEntity.ok(patientService.allPatientVisits(email));
+        return ResponseEntity.ok(visits);
     }
 
     @Operation(summary = "Add patient do database", tags = "Patient")
@@ -67,8 +73,10 @@ public class PatientController {
     })
     @PostMapping
     public ResponseEntity<PatientDTO> addPatient(@RequestBody PatientCreationDTO patientCreationDTO) {
-        log.info("Patient with: email: {}, password: {}, idCardNo: {}, firstname: {}, lastname: {}, phone number: {}, birthday: {}, has been add to database", patientCreationDTO.getEmail(), patientCreationDTO.getPassword(), patientCreationDTO.getIdCardNo(), patientCreationDTO.getFirstName(), patientCreationDTO.getLastName(), patientCreationDTO.getPhoneNumber(), patientCreationDTO.getBirthday());
-        return ResponseEntity.ok(patientService.addNewPatient(patientCreationDTO));
+        log.info("Trying to add patient to database");
+        var patient=patientService.addNewPatient(patientCreationDTO);
+        log.info("Patient with body: {}, has been add to database",patientCreationDTO);
+        return ResponseEntity.ok(patient);
     }
 
     @Operation(summary = "Delete patient form database", tags = "Patient")
@@ -79,6 +87,7 @@ public class PatientController {
     })
     @DeleteMapping("/{email}")
     public void deletePatient(@PathVariable String email) {
+        log.info("Trying to delete patient by email: {} from database", email);
         patientService.deletePatient(email);
         log.info("Patient with email: {}, has been deleted", email);
     }
@@ -92,8 +101,10 @@ public class PatientController {
     })
     @PutMapping("/{email}")
     public ResponseEntity<PatientDTO> updatePatient(@PathVariable String email, @RequestBody PatientEditDTO updatePatient) {
-        log.info("Patient with email: {}, has been update by: email: {}, password: {}, firstname: {}, lastname: {}, phone number: {}, birthday: {}", email, updatePatient.getEmail(), updatePatient.getPassword(), updatePatient.getFirstName(), updatePatient.getLastName(), updatePatient.getPhoneNumber(), updatePatient.getBirthday());
-        return ResponseEntity.ok(patientService.update(email, updatePatient));
+        log.info("Try to update patient with email: {}", email);
+        var patient= patientService.update(email, updatePatient);
+        log.info("Patient with email: {}, has been update to body: {}", email, updatePatient);
+        return ResponseEntity.ok(patient);
     }
 
     @Operation(summary = "Update patient's password", tags = "Patient")
@@ -104,6 +115,7 @@ public class PatientController {
     })
     @PatchMapping("/{email}")
     public void updatePassword(@PathVariable String email, @RequestBody String password) {
+        log.info("Trying to change password from patient by email: {}", email);
         patientService.updatePassword(email, password);
         log.info("Patient with email: {}, update his password to: {}", email, password);
     }
