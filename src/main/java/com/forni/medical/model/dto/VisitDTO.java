@@ -7,17 +7,19 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class VisitDTO {
+
     private Long id;
     private LocalDateTime visitStartDate;
     private LocalDateTime visitEndDate;
     private Duration visitTime;
     private PatientDTO patient;
     private Long patientId;
+    private DoctorDTO doctor;
+    private Long doctorId;
 }

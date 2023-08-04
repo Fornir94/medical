@@ -7,10 +7,11 @@ import org.mapstruct.Builder;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", builder=@Builder(disableBuilder = true))
+@Mapper(componentModel = "spring", builder = @Builder(disableBuilder = true))
 public interface VisitMapper {
 
     @Mapping(target = "patientId", source = "patient.id")
+    @Mapping(target = "doctorId", source = "doctor.id")
     VisitDTO toDto(Visit visit);
 
     Visit toEntity(VisitCreationDTO visitCreationDTO);

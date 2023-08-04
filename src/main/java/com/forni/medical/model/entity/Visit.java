@@ -2,11 +2,9 @@ package com.forni.medical.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.boot.SpringApplication;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,10 +23,13 @@ public class Visit {
     private LocalDateTime visitEndDate;
     private Duration visitTime;
     @ManyToOne
-    @JoinColumn(name="patient_id")
+    @JoinColumn(name = "patient_id")
     private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
 
-    public void setDurationTime(){
+    public void setDurationTime() {
         this.visitTime = Duration.between(visitStartDate, visitEndDate);
     }
 }

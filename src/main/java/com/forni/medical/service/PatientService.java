@@ -3,9 +3,9 @@ package com.forni.medical.service;
 import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientEditDTO;
-import com.forni.medical.exception.patientexception.PatientExistsException;
-import com.forni.medical.exception.patientexception.IllegalPatientDataException;
-import com.forni.medical.exception.patientexception.PatientNotFoundException;
+import com.forni.medical.exception.patient.PatientExistsException;
+import com.forni.medical.exception.patient.IllegalPatientDataException;
+import com.forni.medical.exception.patient.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
 import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
@@ -34,11 +34,11 @@ public class PatientService {
     }
 
     public PatientDTO update(String email, PatientEditDTO updatePatient) {
-        Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
+        Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient with email: "+email+" not found"));
         Optional<Patient> patientOptional = patientRepository.findByEmail(updatePatient.getEmail());
 
         if (!updatePatient.getEmail().equals(email) && patientOptional.isPresent()) {
-            throw new PatientExistsException("Any user have a such email");
+            throw new PatientExistsException("User with email " + updatePatient.getEmail() + " exists in system");
         }
         if (updatePatient.getBirthday() == null || updatePatient.getEmail() == null
                 || updatePatient.getPassword() == null || updatePatient.getFirstName() == null || updatePatient.getLastName() == null
@@ -53,7 +53,7 @@ public class PatientService {
     public void updatePassword(String email, String password) {
         Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
         if (password == null) {
-            throw new IllegalArgumentException("Wrong password");
+            throw new IllegalArgumentException("Is not allowed put empty password");
         }
         patient.setPassword(password);
         patientRepository.save(patient);
@@ -65,8 +65,8 @@ public class PatientService {
                 .collect(Collectors.toList());
     }
 
-    public List<VisitDTO> allPatientVisits(String email){
-        Patient patient = patientRepository.findByEmail(email).orElseThrow(()->new PatientNotFoundException("Patient not found"));
+    public List<VisitDTO> allPatientVisits(String email) {
+        Patient patient = patientRepository.findByEmail(email).orElseThrow(() -> new PatientNotFoundException("Patient not found"));
         return patient.getVisits().stream()
                 .map(visitMapper::toDto)
                 .collect(Collectors.toList());
@@ -75,10 +75,10 @@ public class PatientService {
     public PatientDTO addNewPatient(PatientCreationDTO patientCreationDTO) {
         Optional<Patient> patient1 = patientRepository.findByEmail(patientCreationDTO.getEmail());
         if (patient1.isPresent()) {
-            throw new PatientExistsException("Patient with this email already exists");
+            throw new PatientExistsException("User with email " + patientCreationDTO.getEmail() + " exists in system");
         }
         Patient patient = patientMapper.toEntity(patientCreationDTO);
-         return patientMapper.toDto(patientRepository.save(patient));
+        return patientMapper.toDto(patientRepository.save(patient));
     }
 
     public void deletePatient(String email) {

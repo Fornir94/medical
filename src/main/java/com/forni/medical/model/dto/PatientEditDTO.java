@@ -1,4 +1,5 @@
 package com.forni.medical.model.dto;
+
 import lombok.*;
 
 import java.time.LocalDate;

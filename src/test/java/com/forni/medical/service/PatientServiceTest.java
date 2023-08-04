@@ -1,13 +1,16 @@
 package com.forni.medical.service;
 
-import com.forni.medical.exception.patientexception.IllegalPatientDataException;
-import com.forni.medical.exception.patientexception.PatientExistsException;
-import com.forni.medical.exception.patientexception.PatientNotFoundException;
+import com.forni.medical.exception.patient.IllegalPatientDataException;
+import com.forni.medical.exception.patient.PatientExistsException;
+import com.forni.medical.exception.patient.PatientNotFoundException;
 import com.forni.medical.mapper.PatientMapper;
+import com.forni.medical.mapper.VisitMapper;
 import com.forni.medical.model.dto.PatientCreationDTO;
 import com.forni.medical.model.dto.PatientDTO;
 import com.forni.medical.model.dto.PatientEditDTO;
+import com.forni.medical.model.dto.VisitDTO;
 import com.forni.medical.model.entity.Patient;
+import com.forni.medical.model.entity.Visit;
 import com.forni.medical.repository.PatientRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +36,8 @@ public class PatientServiceTest {
     PatientRepository patientRepository;
     @Mock
     PatientMapper patientMapper;
+    @Mock
+    VisitMapper visitMapper;
     @InjectMocks
     PatientService patientService;
 
@@ -117,7 +123,7 @@ public class PatientServiceTest {
     }
 
     @Test
-    void allPatients_DataCorrect_ListOfPatiensCreated() {
+    void allPatients_DataCorrect_ListOfPatientsCreated() {
         //Given
         List<Patient> patients = new ArrayList<>();
         Patient patient = new Patient();
@@ -140,6 +146,38 @@ public class PatientServiceTest {
         Assertions.assertEquals("loool", result.get(0).getEmail());
         Assertions.assertEquals("xddd", result.get(1).getEmail());
     }
+
+    @Test
+    void allPatientVisits_DataCorrect_VisitReturned() {
+        List<Visit> visits = new ArrayList<>();
+        Patient patient = new Patient();
+        patient.setEmail("lol");
+        patient.setVisits(visits);
+        VisitDTO visitDTO = new VisitDTO();
+        visitDTO.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        Visit visit = new Visit();
+        visit.setVisitStartDate(LocalDateTime.of(2024, 12, 10, 17, 30, 0));
+        visits.add(visit);
+        Mockito.when(patientRepository.findByEmail("lol")).thenReturn(Optional.of(patient));
+        Mockito.when(visitMapper.toDto(eq(visit))).thenReturn(visitDTO);
+
+        var result = patientService.allPatientVisits("lol");
+
+        Assertions.assertEquals(visitDTO.getVisitStartDate(), result.get(0).getVisitStartDate());
+    }
+
+    @Test
+    void allPatientVisits_PatientNotFound_ExceptionThrow() {
+        Patient patient = new Patient();
+        patient.setEmail("lol");
+        Mockito.when(patientRepository.findByEmail("lol")).thenReturn(Optional.empty());
+
+        var result = Assertions.assertThrows(PatientNotFoundException.class, () -> patientService.allPatientVisits(patient.getEmail()));
+        //Then
+        Assertions.assertEquals("Patient not found", result.getMessage());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, result.getHttpStatus());
+    }
+
 
     @Test
     void updatePassword_DataCorrect_PasswordUpdated() {

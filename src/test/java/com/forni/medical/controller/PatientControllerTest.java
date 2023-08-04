@@ -30,8 +30,6 @@ public class PatientControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private PatientController patientController;
 
     @Test
     void getPatientByEmail_PatientExists_PatientReturned() throws Exception {
@@ -53,7 +51,7 @@ public class PatientControllerTest {
     }
 
     @Test
-    void getPatientsVisits_VisitsExists_VisitsReturned() throws Exception{
+    void getPatientsVisits_VisitsExists_VisitsReturned() throws Exception {
         mockMvc.perform(get("/patients/misiakasia@gmail.com/visits"))
                 .andDo(print())
                 .andExpect(status().is(200))

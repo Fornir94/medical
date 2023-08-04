@@ -29,7 +29,7 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private List<Visit> visits;
 
-    public void update(PatientEditDTO patientEditDTO){
+    public void update(PatientEditDTO patientEditDTO) {
         this.email = patientEditDTO.getEmail();
         this.password = patientEditDTO.getPassword();
         this.firstName = patientEditDTO.getFirstName();
